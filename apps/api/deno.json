@@ -1,0 +1,13 @@
+{
+  "imports": {
+    "@sharedTypes/": "../../packages/shared/src/",
+    "deno-dom-wasm": "https://deno.land/x/deno_dom/deno-dom-wasm.ts",
+    "zod": "npm:zod"
+  },
+  "tasks": {
+    "dev": "deno run -A --watch=reload src/server.ts",
+    "check": "deno check --unstable src",
+    "lint": "deno lint",
+    "prisma": "deno run -A npm:prisma --help"
+  }
+}

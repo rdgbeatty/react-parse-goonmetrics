@@ -1,0 +1,10 @@
+{
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "dependencies": {
+    "zod": "^4.1.12"
+  }
+}

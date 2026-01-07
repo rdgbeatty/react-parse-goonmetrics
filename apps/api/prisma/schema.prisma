@@ -1,0 +1,10 @@
+// Prisma schema placeholder. We'll add datasource and models later.
+
+// generator client {
+//   provider = "prisma-client-js"
+// }
+
+// datasource db {
+//   provider = "postgresql"
+//   url      = env("DATABASE_URL")
+// }

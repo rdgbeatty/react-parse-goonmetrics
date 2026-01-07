@@ -1,0 +1,36 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Web: pnpm dev",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "pnpm dev",
+      "cwd": "${workspaceFolder}/apps/web"
+    },
+    {
+      "name": "API: deno task dev",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "deno task dev",
+      "cwd": "${workspaceFolder}/apps/api"
+    },
+    {
+      "name": "Open Browser",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "pwsh -NoLogo -NoProfile -Command Start-Process 'http://localhost:5173'",
+      "cwd": "${workspaceFolder}"
+    }
+  ],
+  "compounds": [
+    {
+      "name": "Dev: web + api + browser",
+      "configurations": [
+        "Web: pnpm dev",
+        "API: deno task dev",
+        "Open Browser"
+      ]
+    }
+  ]
+}
