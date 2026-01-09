@@ -6,13 +6,13 @@ export const Nav: FC = () => (
     <div className="nav-inner">
       <div className="nav-links">
         <Link to="/" className="nav-link">
+          Table View
+        </Link>
+        <Link to="/load" className="nav-link">
           Load Data
         </Link>
         <Link to="/browse" className="nav-link">
           Browse Data
-        </Link>
-        <Link to="/table" className="nav-link">
-          Table View
         </Link>
       </div>
     </div>

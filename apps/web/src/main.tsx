@@ -17,16 +17,16 @@ const router = createHashRouter([
     children: [
       {
         index: true,
+        element: <TableDataPage />,        
+      },
+      {
+        path: "load",
         element: <LoadDataPage />,
       },
       {
         path: "browse",
         element: <BrowseDataPage />,
       },
-      {
-        path: "table",
-        element: <TableDataPage />,        
-      }
     ],
   },
 ]);

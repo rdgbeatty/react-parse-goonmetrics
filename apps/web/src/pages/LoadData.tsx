@@ -15,15 +15,12 @@ export const LoadDataPage: FC = () => {
     setRandomNumber(newNumber);
   };
 
-  const getRemoteData = () => {
-    return "{test: 'test'}";
-  }
-
   return (
     <div>
       <h1 className="page-title">Load Data</h1>
+      <p>TODO.   Here, have a random number generator button. </p>
       <button onClick={handleIngestClick} className="btn primary">
-        Start Ingest
+        Generate Random Number
       </button>
       <p>Random Number: {randomNumber}</p>
     </div>
