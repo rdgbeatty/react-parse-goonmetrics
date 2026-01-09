@@ -1,3 +1,5 @@
+/// <reference types="vite/client" />
+
 import "./TableDataPage.css";
 import { FC, useState } from "react";
 import { ImportRow } from "@sharedTypes/importRow.ts";
@@ -179,8 +181,9 @@ export const TableDataPage: FC = () => {
     return sortedRows
   };
 
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:4000";
   const loadFromBackendJson = async () => {
-    const res = await fetch("http://localhost:4000/api/scrape-json");
+    const res = await fetch(`${API_BASE_URL}/api/scrape-json`);
     const data: { ok: boolean; rows?: ImportRow[]; error?: string } = await res.json();
     if (!data.ok || !data.rows) {
       console.error("Backend error:", data.error);
@@ -245,10 +248,10 @@ export const TableDataPage: FC = () => {
             <th onClick={() => handleSort("weekVolume")}>Wk Volume {renderSortIcon("weekVolume")}</th>
             <th onClick={() => handleSort("jitaPrice")}>Jita Price {renderSortIcon("jitaPrice")}</th>
             <th onClick={() => handleSort("cjPrice")}>C-J6MT Price {renderSortIcon("cjPrice")}</th>
-            <th onClick={() => handleSort("markupPercent")}>After-Import Markup % {renderSortIcon("markupPercent")}</th>
-            <th onClick={() => handleSort("weekMarkupISK")}>After-Import Markup (ISK) {renderSortIcon("weekMarkupISK")}</th>
+            <th onClick={() => handleSort("markupPercent")}>Goonmetrics Markup % {renderSortIcon("markupPercent")}</th>
+            <th onClick={() => handleSort("weekMarkupISK")}>Goonmetrics Wk Profit {renderSortIcon("weekMarkupISK")}</th>
             <th onClick={() => handleSort("adjustedImportPrice")}>Adj Import {renderSortIcon("adjustedImportPrice")}</th>
-            <th onClick={() => handleSort("weekProfit")}>After-Tax Week Profit {renderSortIcon("weekProfit")}</th>
+            <th onClick={() => handleSort("weekProfit")}>After-Expense Week Profit {renderSortIcon("weekProfit")}</th>
             <th onClick={() => handleSort("fillerScore")}>Filler Score {renderSortIcon("fillerScore")}</th>
             <th onClick={() => handleSort("pricePerM3")}>Jita Price Per M3 {renderSortIcon("pricePerM3")}</th>
           </tr>
