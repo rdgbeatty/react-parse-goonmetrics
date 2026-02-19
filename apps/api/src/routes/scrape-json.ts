@@ -1,5 +1,6 @@
 // routes.ts (where your register(app) lives)
 import type { ImportRow } from "@sharedTypes/importRow.ts";
+import { OrderType } from "@sharedTypes/importRow.ts";
 import type { ScraperService } from "../services/ScraperService.ts";
 
 export function register(app: any, scraperService: ScraperService) {
@@ -9,7 +10,21 @@ export function register(app: any, scraperService: ScraperService) {
     c.header("Access-Control-Allow-Origin", "*");
 
     try {
-      const rows: ImportRow[] = await service.GetAllImportRows();
+      const orderTypeParam = c.req.query("orderType");
+
+      // Validate and convert to OrderType
+      let orderType = OrderType.SELL; // default
+      if (orderTypeParam) {
+        if (orderTypeParam !== OrderType.BUY && orderTypeParam !== OrderType.SELL) {
+          return c.json({
+            ok: false,
+            error: `Invalid orderType. Must be '${OrderType.BUY}' or '${OrderType.SELL}'.`
+          }, 400);
+        }
+        orderType = orderTypeParam;
+      }
+
+      const rows: ImportRow[] = await service.GetAllImportRows(orderType);
       return c.json({ ok: true, rows });
     } catch (err) {
       console.error("Error fetching/parsing:", err);

@@ -1,3 +1,10 @@
+export const OrderType = {
+  BUY: "buy",
+  SELL: "sell",
+} as const;
+
+export type OrderType = typeof OrderType[keyof typeof OrderType];
+
 export type ImportRow = {
   id: number;
   itemName: string;
@@ -7,4 +14,5 @@ export type ImportRow = {
   cjPrice: number;
   markupPercent: number;   // e.g. 120.5 (for "120.5%")
   weekMarkupISK: number;   // ISK per week
+  orderType: OrderType;
 };

@@ -1,8 +1,47 @@
 /// <reference types="vite/client" />
 
 import "./TableDataPage.css";
-import { FC, useState } from "react";
-import { ImportRow } from "@sharedTypes/importRow.ts";
+import { FC, useState, useEffect } from "react";
+import { ImportRow, OrderType } from "@sharedTypes/importRow.ts";
+import { OrderTypeToggle } from "../components/OrderTypeToggle";
+
+// Tooltip component for displaying filler score formula
+const FillerScoreTooltip: FC = () => {
+  const [showTooltip, setShowTooltip] = useState(false);
+
+  return (
+    <span
+      className="filler-score-tooltip-wrapper"
+      onMouseEnter={() => setShowTooltip(true)}
+      onMouseLeave={() => setShowTooltip(false)}
+    >
+      <span className="filler-score-tooltip-icon">ⓘ</span>
+      {showTooltip && (
+        <div className="filler-score-tooltip-content">
+          {`Filler Score Formula
+
+Score = (80% × Volume) + (10% × Profit) + (10% × Transport)
+
+Components:
+• Volume: 0-100 (percentile of m³ moved weekly)
+• Profit: -100 to 100 (percentile of weekly profit)
+• Transport: 100 to -50 (cost efficiency per m³)
+
+Transport Tiers (Diminishing Returns):
+  Excellent (100): < 50k ISK/m³
+  Good (70): 50k-100k ISK/m³
+  Fair (40): 100k-150k ISK/m³
+  Poor (10): 150k-170k ISK/m³
+  ─── Breakeven at 170k ISK/m³ ───
+  Worthless (-50): > 170k ISK/m³
+
+Score Range: -15 to 100
+Higher scores = better filler candidates`}
+        </div>
+      )}
+    </span>
+  );
+};
 
 const BASE_TAX = 0.0537;
 const RELIST_TAX_PER = 0.003;
@@ -12,14 +51,15 @@ type DerivedRow = ImportRow & {
   adjustedImportPrice: number;
   unitProfit: number;
   weekProfit: number;
+  afterExpenseMarkupPercent: number;
   pricePerM3: number;
 
-  // new normalized scores:
+  // percentile-based scores:
   weeklySizeMoved: number,
-  volScore: number;         // 0–1, more weeklySizeMoved = better
-  profitScore: number;      // 0–1, more weekProfit = better
-  transportProfitabilityScore: number; // -1..1, higher = better filler (low ISK/m³)
-  fillerScore: number;      // weighted combo of the three
+  volScore: number;         // 0-100 percentile, more weeklySizeMoved = higher score
+  profitScore: number;      // -100 to 100 percentile, positive profit = positive score
+  transportProfitabilityScore: number; // 100 to -50 tier-based, <170k ISK/m³ breakeven
+  fillerScore: number;      // -15 to 100, weighted additive formula (80% vol, 10% profit, 10% transport)
 };
 
 function computeDerivedRow(row: ImportRow, relistCount: number): DerivedRow {
@@ -32,10 +72,12 @@ function computeDerivedRow(row: ImportRow, relistCount: number): DerivedRow {
 
   const unitProfit = saleNet - adjustedImportPrice;
   const weekProfit = unitProfit * row.weekVolume;
+  const afterExpenseMarkupPercent = adjustedImportPrice > 0
+    ? (unitProfit / adjustedImportPrice) * 100
+    : 0;
 
   const size = feeOld > 0 ? feeOld / 1000 : 0; // m³ per unit
   const weeklySizeMoved = size * row.weekVolume; // weekly m³ moved
-//  const fillerScore = weeklySizeMoved + PROFIT_WEIGHT * weekProfit;
 
   const pricePerM3 = row.jitaPrice / size;
 
@@ -44,6 +86,7 @@ function computeDerivedRow(row: ImportRow, relistCount: number): DerivedRow {
     adjustedImportPrice,
     unitProfit,
     weekProfit,
+    afterExpenseMarkupPercent,
     pricePerM3,
     weeklySizeMoved,
     volScore: 0,
@@ -53,95 +96,102 @@ function computeDerivedRow(row: ImportRow, relistCount: number): DerivedRow {
   };
 }
 
-const FILLER_WEIGHT_VOL = 0.4;
-const FILLER_WEIGHT_PROFIT = 0.3;
-const FILLER_WEIGHT_CHEAP = 0.3;
+const FILLER_WEIGHT_VOL = 0.8;
+const FILLER_WEIGHT_PROFIT = 0.1;
+const FILLER_WEIGHT_CHEAP = 0.1;
 
-const T = 50_000;
-const THIGH = 170_000; // tweakable
-
-// Compute a transport-based profitability score from price per m³.
-// Returns roughly -1..1: 1 = ideal filler (very cheap per m³), 0 = breakpoint, negative = too valuable
-function computeTransportProfitabilityScore(pricePerM3: number): number {
+// Transport score: 100 to -50 based on price per m³ tiers
+// Breakeven at 170k ISK/m³, negative above (worthless filler)
+// Diminishing returns curve below breakeven
+function computeTransportScore(pricePerM3: number): number {
   if (!Number.isFinite(pricePerM3) || pricePerM3 <= 0) {
-    return 1; // treat invalid values as safe filler
+    return 100; // treat invalid values as excellent filler
   }
 
-  if (pricePerM3 <= T) {
-    return 1; // cheap, ideal filler
-  }
-
-  if (pricePerM3 <= THIGH) {
-    // simple linear drop from 1 at T to 0 at THIGH
-    return 1 - (pricePerM3 - T) / (THIGH - T);
-  }
-
-  // Above THIGH: make it negative, capped in [-1, 0)
-  const ratio = pricePerM3 / THIGH;
-  const penalty = Math.log10(ratio); // grows slowly even for crazy values
-  return -Math.min(1, penalty);
+  if (pricePerM3 < 50000) return 100;      // Excellent: < 50k ISK/m³
+  if (pricePerM3 < 100000) return 70;      // Good: 50k-100k ISK/m³
+  if (pricePerM3 < 150000) return 40;      // Fair: 100k-150k ISK/m³
+  if (pricePerM3 < 170000) return 10;      // Poor: 150k-170k ISK/m³ (approaching breakeven)
+  return -50;                              // Worthless: > 170k ISK/m³ (strong penalty)
 }
 
 
 function computeFillerScores(rows: DerivedRow[]): DerivedRow[] {
   if (rows.length === 0) return rows;
+  if (rows.length === 1) {
+    // Single item gets middle percentile scores
+    const r = rows[0];
+    const transportScore = computeTransportScore(r.pricePerM3);
+    const volScore = 50;
+    const profitScore = r.weekProfit >= 0 ? 50 : -50;
+    const fillerScore =
+      FILLER_WEIGHT_VOL * volScore +
+      FILLER_WEIGHT_PROFIT * profitScore +
+      FILLER_WEIGHT_CHEAP * transportScore;
 
-
-  // 1) Find min/max for each metric
-  let minVol = Infinity, maxVol = -Infinity;
-  let maxPositiveProfit = 0;
-  let maxLossMagnitude = 0;
-
-  for (const r of rows) {
-    // weeklySizeMoved
-    if (r.weeklySizeMoved < minVol) minVol = r.weeklySizeMoved;
-    if (r.weeklySizeMoved > maxVol) maxVol = r.weeklySizeMoved;
-
-    if (r.weekProfit > 0) {
-      maxPositiveProfit = Math.max(maxPositiveProfit, r.weekProfit);
-    } else if (r.weekProfit < 0) {
-      maxLossMagnitude = Math.max(maxLossMagnitude, Math.abs(r.weekProfit));
-    }
+    return [{
+      ...r,
+      volScore,
+      profitScore,
+      transportProfitabilityScore: transportScore,
+      fillerScore,
+    }];
   }
 
-  const volRange = maxVol - minVol || 1;
+  // 1) Create sorted indices for volume (ascending - lowest volume = rank 0)
+  const volumeIndices = rows
+    .map((r, idx) => ({ idx, value: r.weeklySizeMoved }))
+    .sort((a, b) => a.value - b.value);
 
-  // 2) Produce a new array with normalized scores + fillerScore
-  return rows.map((r) => {
-    // normalize volume: more is better
-    const volScore =
-      volRange === 0
-        ? 0.5
-        : (r.weeklySizeMoved - minVol) / volRange;
+  const volumeRanks = new Map<number, number>();
+  volumeIndices.forEach((item, rank) => {
+    volumeRanks.set(item.idx, rank);
+  });
 
-    let profitScore = 0;
+  // 2) Create sorted indices for profit (ascending - most negative = rank 0)
+  const profitIndices = rows
+    .map((r, idx) => ({ idx, value: r.weekProfit }))
+    .sort((a, b) => a.value - b.value);
+
+  const profitRanks = new Map<number, number>();
+  profitIndices.forEach((item, rank) => {
+    profitRanks.set(item.idx, rank);
+  });
+
+  // 3) Compute percentile scores and filler score for each row
+  const total = rows.length;
+  return rows.map((r, idx) => {
+    // Volume percentile: 0-100 (higher volume = higher score)
+    const volumeRank = volumeRanks.get(idx)!;
+    const volScore = (volumeRank / (total - 1)) * 100;
+
+    // Profit percentile: -100 to 100
+    const profitRank = profitRanks.get(idx)!;
+    let profitScore: number;
     if (r.weekProfit >= 0) {
-      profitScore =
-        maxPositiveProfit === 0 ? 0 : r.weekProfit / maxPositiveProfit;
+      // Positive profit: map to 0-100
+      const profitPercentile = (profitRank / (total - 1)) * 100;
+      profitScore = profitPercentile;
     } else {
-      const lossMagnitude = Math.abs(r.weekProfit);
-      profitScore =
-        maxLossMagnitude === 0 ? 0 : -(lossMagnitude / maxLossMagnitude);
+      // Negative profit: map to -100 to 0
+      const profitPercentile = (profitRank / (total - 1)) * 100;
+      profitScore = profitPercentile - 100; // shifts from 0-100 to -100 to 0
     }
 
-    const transportProfitabilityScore = computeTransportProfitabilityScore(r.pricePerM3); // -1..1
+    // Transport score: 0-100 based on tiers
+    const transportScore = computeTransportScore(r.pricePerM3);
 
-    const baseScore =
+    // Final additive formula: -30 to 100 range
+    const fillerScore =
       FILLER_WEIGHT_VOL * volScore +
-      FILLER_WEIGHT_PROFIT * profitScore;
-
-    let fillerScore = baseScore * transportProfitabilityScore;
-
-    // If both baseScore and transportProfitabilityScore are negative, make fillerScore negative
-    if (baseScore < 0 && transportProfitabilityScore < 0) {
-      fillerScore = -fillerScore;
-    }
+      FILLER_WEIGHT_PROFIT * profitScore +
+      FILLER_WEIGHT_CHEAP * transportScore;
 
     return {
       ...r,
       volScore,
       profitScore,
-      transportProfitabilityScore,
+      transportProfitabilityScore: transportScore,
       fillerScore,
     };
   });
@@ -150,17 +200,13 @@ function computeFillerScores(rows: DerivedRow[]): DerivedRow[] {
 
 export const TableDataPage: FC = () => {
   const [rows, setRows] = useState<ImportRow[]>([]);
-  const [nextId, setNextId] = useState(1);
+  const [orderType, setOrderType] = useState<OrderType>(OrderType.SELL);
+  const [loading, setLoading] = useState(true);
 
   const [sortBy, setSortBy] = useState<keyof DerivedRow | null>(null);
   const [sortDir, setSortDir] = useState<"asc" | "desc">("desc");
 
   const [relistCount, setRelistCount] = useState(0);
-
-  const clearRows = () => setRows([]);
-
-  const sortByValueDesc = () =>
-    setRows(prev => [...prev].sort((a, b) => b.weekMarkupISK - a.weekMarkupISK));
 
   const computeDisplayRows = (): DerivedRow[] =>  {
     const derivedRows: DerivedRow[] = rows.map((r) =>
@@ -182,17 +228,28 @@ export const TableDataPage: FC = () => {
   };
 
   const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:4000";
-  const loadFromBackendJson = async () => {
-    const res = await fetch(`${API_BASE_URL}/api/scrape-json`);
-    const data: { ok: boolean; rows?: ImportRow[]; error?: string } = await res.json();
-    if (!data.ok || !data.rows) {
-      console.error("Backend error:", data.error);
-      return;
-    }
+  const loadFromBackendJson = async (type: OrderType) => {
+    setLoading(true);
+    try {
+      const res = await fetch(`${API_BASE_URL}/api/scrape-json?orderType=${type}`);
+      const data: { ok: boolean; rows?: ImportRow[]; error?: string } = await res.json();
+      if (!data.ok || !data.rows) {
+        console.error("Backend error:", data.error);
+        return;
+      }
 
-    setRows(data.rows);
-    setNextId(data.rows.length + 1);
+      setRows(data.rows);
+    } catch (error) {
+      console.error("Failed to fetch data:", error);
+    } finally {
+      setLoading(false);
+    }
   };
+
+  // Load data on mount
+  useEffect(() => {
+    loadFromBackendJson(orderType);
+  }, []);
 
   const handleSort = (column: keyof DerivedRow) => {
     if (sortBy === column) {
@@ -220,9 +277,13 @@ export const TableDataPage: FC = () => {
       <h1 className="page-title">Load Data</h1>
 
       <div style={{ display: "flex", gap: 8, marginBottom: 12 }}>
-        <button onClick={sortByValueDesc} className="btn">Sort by Value ↓</button>
-        <button onClick={clearRows} className="btn">Clear</button>
-        <button onClick={loadFromBackendJson} className="btn">Load from Backend JSON</button>
+        <OrderTypeToggle
+          value={orderType}
+          onChange={(newType) => {
+            setOrderType(newType);
+            loadFromBackendJson(newType);
+          }}
+        />
       </div>
 
       {/* Relist count slider */ }
@@ -240,40 +301,47 @@ export const TableDataPage: FC = () => {
         </label>
       </div>
 
-      <table className="table-data">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th onClick={() => handleSort("itemName")}>Item {renderSortIcon("itemName")}</th>
-            <th onClick={() => handleSort("weekVolume")}>Wk Volume {renderSortIcon("weekVolume")}</th>
-            <th onClick={() => handleSort("jitaPrice")}>Jita Price {renderSortIcon("jitaPrice")}</th>
-            <th onClick={() => handleSort("cjPrice")}>C-J6MT Price {renderSortIcon("cjPrice")}</th>
-            <th onClick={() => handleSort("markupPercent")}>Goonmetrics Markup % {renderSortIcon("markupPercent")}</th>
-            <th onClick={() => handleSort("weekMarkupISK")}>Goonmetrics Wk Profit {renderSortIcon("weekMarkupISK")}</th>
-            <th onClick={() => handleSort("adjustedImportPrice")}>Adj Import {renderSortIcon("adjustedImportPrice")}</th>
-            <th onClick={() => handleSort("weekProfit")}>After-Expense Week Profit {renderSortIcon("weekProfit")}</th>
-            <th onClick={() => handleSort("fillerScore")}>Filler Score {renderSortIcon("fillerScore")}</th>
-            <th onClick={() => handleSort("pricePerM3")}>Jita Price Per M3 {renderSortIcon("pricePerM3")}</th>
-          </tr>
-        </thead>
-        <tbody>
-          {computeDisplayRows().map(r => (
-            <tr key={r.id}>
-              <td>{r.id}</td>
-              <td className="left-align">{r.itemName}</td>
-              <td>{formatNumber(r.weekVolume)}</td>
-              <td>{formatNumber(r.jitaPrice)}</td>
-              <td>{formatNumber(r.cjPrice)}</td>
-              <td>{r.markupPercent.toFixed(2)}%</td>
-              <td>{formatNumber(r.weekMarkupISK)}</td>
-              <td>{formatNumber(r.adjustedImportPrice)}</td>
-              <td>{formatNumber(r.weekProfit)}</td>
-              <td>{formatNumber(r.fillerScore)}</td>
-              <td>{formatNumber(r.pricePerM3)}</td>
+      {loading ? (
+        <div className="loading-container">
+          <div className="loading-spinner" />
+          <span className="loading-text">Loading {orderType} orders...</span>
+        </div>
+      ) : (
+        <table className="table-data">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th onClick={() => handleSort("itemName")}>Item {renderSortIcon("itemName")}</th>
+              <th onClick={() => handleSort("weekVolume")}>Wk Volume {renderSortIcon("weekVolume")}</th>
+              <th onClick={() => handleSort("jitaPrice")}>Jita Price {renderSortIcon("jitaPrice")}</th>
+              <th onClick={() => handleSort("cjPrice")}>C-J6MT Price {renderSortIcon("cjPrice")}</th>
+              <th onClick={() => handleSort("adjustedImportPrice")}>Import {renderSortIcon("adjustedImportPrice")}</th>
+              <th onClick={() => handleSort("afterExpenseMarkupPercent")}>After-Expense Markup % {renderSortIcon("afterExpenseMarkupPercent")}</th>
+              <th onClick={() => handleSort("weekMarkupISK")}>Goonmetrics Wk Profit {renderSortIcon("weekMarkupISK")}</th>
+              <th onClick={() => handleSort("weekProfit")}>After-Expense Week Profit {renderSortIcon("weekProfit")}</th>
+              <th onClick={() => handleSort("fillerScore")}>Filler Score {renderSortIcon("fillerScore")} <FillerScoreTooltip /></th>
+              <th onClick={() => handleSort("pricePerM3")}>Jita Price Per M3 {renderSortIcon("pricePerM3")}</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {computeDisplayRows().map(r => (
+              <tr key={r.id}>
+                <td>{r.id}</td>
+                <td className="left-align">{r.itemName}</td>
+                <td>{formatNumber(r.weekVolume)}</td>
+                <td>{formatNumber(r.jitaPrice)}</td>
+                <td>{formatNumber(r.cjPrice)}</td>
+                <td>{formatNumber(r.adjustedImportPrice)}</td>
+                <td>{r.afterExpenseMarkupPercent.toFixed(2)}%</td>
+                <td>{formatNumber(r.weekMarkupISK)}</td>
+                <td>{formatNumber(r.weekProfit)}</td>
+                <td>{formatNumber(r.fillerScore)}</td>
+                <td>{formatNumber(r.pricePerM3)}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
     </div>
   );
 };

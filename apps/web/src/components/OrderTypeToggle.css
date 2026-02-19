@@ -1,0 +1,42 @@
+.order-type-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.order-type-toggle-label {
+  font-weight: 500;
+  color: #333;
+}
+
+.order-type-toggle-buttons {
+  display: inline-flex;
+  border: 2px solid #ddd;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.order-type-toggle button {
+  padding: 8px 16px;
+  border: none;
+  background-color: #f5f5f5;
+  color: #666;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.order-type-toggle button:not(:first-child) {
+  border-left: 1px solid #ddd;
+}
+
+.order-type-toggle button.active.sell {
+  background-color: #4CAF50;
+  color: white;
+  font-weight: bold;
+}
+
+.order-type-toggle button.active.buy {
+  background-color: #2196F3;
+  color: white;
+  font-weight: bold;
+}
