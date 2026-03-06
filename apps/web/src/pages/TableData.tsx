@@ -4,6 +4,7 @@ import "./TableDataPage.css";
 import { FC, useState, useEffect } from "react";
 import { ImportRow, OrderType } from "@sharedTypes/importRow.ts";
 import { OrderTypeToggle } from "../components/OrderTypeToggle";
+import { DataSourceToggle, type DataSource } from "../components/DataSourceToggle";
 
 // Tooltip component for displaying filler score formula
 const FillerScoreTooltip: FC = () => {
@@ -64,8 +65,11 @@ type DerivedRow = ImportRow & {
 
 function computeDerivedRow(row: ImportRow, relistCount: number): DerivedRow {
   const feeOld = row.importPrice - row.jitaPrice;
-  const feeNew = feeOld * IMPORT_FEE_MULTIPLIER;
-  const adjustedImportPrice = row.jitaPrice + feeNew;
+
+  // When feeOld <= 0 (no meaningful shipping fee), fall back to raw importPrice
+  const adjustedImportPrice = feeOld > 0
+    ? row.jitaPrice + feeOld * IMPORT_FEE_MULTIPLIER
+    : row.importPrice;
 
   const taxRate = BASE_TAX + relistCount * RELIST_TAX_PER;
   const saleNet = row.cjPrice * (1 - taxRate);
@@ -79,7 +83,7 @@ function computeDerivedRow(row: ImportRow, relistCount: number): DerivedRow {
   const size = feeOld > 0 ? feeOld / 1000 : 0; // m³ per unit
   const weeklySizeMoved = size * row.weekVolume; // weekly m³ moved
 
-  const pricePerM3 = row.jitaPrice / size;
+  const pricePerM3 = size > 0 ? row.jitaPrice / size : 0;
 
   return {
     ...row,
@@ -201,6 +205,7 @@ function computeFillerScores(rows: DerivedRow[]): DerivedRow[] {
 export const TableDataPage: FC = () => {
   const [rows, setRows] = useState<ImportRow[]>([]);
   const [orderType, setOrderType] = useState<OrderType>(OrderType.SELL);
+  const [dataSource, setDataSource] = useState<DataSource>("top500");
   const [loading, setLoading] = useState(true);
 
   const [sortBy, setSortBy] = useState<keyof DerivedRow | null>(null);
@@ -228,10 +233,11 @@ export const TableDataPage: FC = () => {
   };
 
   const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:4000";
-  const loadFromBackendJson = async (type: OrderType) => {
+  const loadFromBackendJson = async (type: OrderType, source: DataSource) => {
     setLoading(true);
     try {
-      const res = await fetch(`${API_BASE_URL}/api/scrape-json?orderType=${type}`);
+      const endpoint = source === "top500" ? "/api/scrape-json" : "/api/scrape-marketgroup";
+      const res = await fetch(`${API_BASE_URL}${endpoint}?orderType=${type}`);
       const data: { ok: boolean; rows?: ImportRow[]; error?: string } = await res.json();
       if (!data.ok || !data.rows) {
         console.error("Backend error:", data.error);
@@ -248,7 +254,7 @@ export const TableDataPage: FC = () => {
 
   // Load data on mount
   useEffect(() => {
-    loadFromBackendJson(orderType);
+    loadFromBackendJson(orderType, dataSource);
   }, []);
 
   const handleSort = (column: keyof DerivedRow) => {
@@ -276,12 +282,19 @@ export const TableDataPage: FC = () => {
     <div>
       <h1 className="page-title">Load Data</h1>
 
-      <div style={{ display: "flex", gap: 8, marginBottom: 12 }}>
+      <div style={{ display: "flex", gap: 16, marginBottom: 12 }}>
         <OrderTypeToggle
           value={orderType}
           onChange={(newType) => {
             setOrderType(newType);
-            loadFromBackendJson(newType);
+            loadFromBackendJson(newType, dataSource);
+          }}
+        />
+        <DataSourceToggle
+          value={dataSource}
+          onChange={(newSource) => {
+            setDataSource(newSource);
+            loadFromBackendJson(orderType, newSource);
           }}
         />
       </div>
@@ -314,10 +327,10 @@ export const TableDataPage: FC = () => {
               <th onClick={() => handleSort("itemName")}>Item {renderSortIcon("itemName")}</th>
               <th onClick={() => handleSort("weekVolume")}>Wk Volume {renderSortIcon("weekVolume")}</th>
               <th onClick={() => handleSort("jitaPrice")}>Jita Price {renderSortIcon("jitaPrice")}</th>
-              <th onClick={() => handleSort("cjPrice")}>C-J6MT Price {renderSortIcon("cjPrice")}</th>
               <th onClick={() => handleSort("adjustedImportPrice")}>Import {renderSortIcon("adjustedImportPrice")}</th>
+              <th onClick={() => handleSort("cjPrice")}>C-J6MT Price {renderSortIcon("cjPrice")}</th>
               <th onClick={() => handleSort("afterExpenseMarkupPercent")}>After-Expense Markup % {renderSortIcon("afterExpenseMarkupPercent")}</th>
-              <th onClick={() => handleSort("weekMarkupISK")}>Goonmetrics Wk Profit {renderSortIcon("weekMarkupISK")}</th>
+              {dataSource === "top500" && <th onClick={() => handleSort("weekMarkupISK")}>Goonmetrics Wk Profit {renderSortIcon("weekMarkupISK")}</th>}
               <th onClick={() => handleSort("weekProfit")}>After-Expense Week Profit {renderSortIcon("weekProfit")}</th>
               <th onClick={() => handleSort("fillerScore")}>Filler Score {renderSortIcon("fillerScore")} <FillerScoreTooltip /></th>
               <th onClick={() => handleSort("pricePerM3")}>Jita Price Per M3 {renderSortIcon("pricePerM3")}</th>
@@ -330,10 +343,10 @@ export const TableDataPage: FC = () => {
                 <td className="left-align">{r.itemName}</td>
                 <td>{formatNumber(r.weekVolume)}</td>
                 <td>{formatNumber(r.jitaPrice)}</td>
-                <td>{formatNumber(r.cjPrice)}</td>
                 <td>{formatNumber(r.adjustedImportPrice)}</td>
+                <td>{formatNumber(r.cjPrice)}</td>
                 <td>{r.afterExpenseMarkupPercent.toFixed(2)}%</td>
-                <td>{formatNumber(r.weekMarkupISK)}</td>
+                {dataSource === "top500" && <td>{formatNumber(r.weekMarkupISK)}</td>}
                 <td>{formatNumber(r.weekProfit)}</td>
                 <td>{formatNumber(r.fillerScore)}</td>
                 <td>{formatNumber(r.pricePerM3)}</td>

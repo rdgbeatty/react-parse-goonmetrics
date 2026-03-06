@@ -1,9 +1,9 @@
 // routes.ts (where your register(app) lives)
 import type { ImportRow } from "@sharedTypes/importRow.ts";
 import { OrderType } from "@sharedTypes/importRow.ts";
-import type { ScraperService } from "../services/ScraperService.ts";
+import type { Top500ScraperService } from "../services/Top500ScraperService.ts";
 
-export function register(app: any, scraperService: ScraperService) {
+export function register(app: any, scraperService: Top500ScraperService) {
   const service = scraperService;
 
   app.get("/api/scrape-json", async (c: any) => {

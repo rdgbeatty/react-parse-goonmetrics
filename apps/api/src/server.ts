@@ -13,17 +13,23 @@ import { register as registerIngest } from "./routes/ingest.ts";
 import { register as registerItems } from "./routes/items.ts";
 import { register as registerScrape } from "./routes/scrape.ts";
 import { register as registerScrapeJson } from "./routes/scrape-json.ts";
-import { ScraperService } from "./services/ScraperService.ts";
+import { register as registerScrapeMarketGroup } from "./routes/scrape-marketgroup.ts";
+import { Top500ScraperService } from "./services/Top500ScraperService.ts";
+import { MarketGroupScraperService } from "./services/MarketGroupScraperService.ts";
 import { InMemoryItemRepository } from "./repositories/InMemoryItemRepository.ts";
 
 // Construct shared dependencies once and pass them into route registration.
-const defaultRepo = new InMemoryItemRepository();
-const scraperService = new ScraperService(defaultRepo);
+const top500Repo = new InMemoryItemRepository();
+const top500ScraperService = new Top500ScraperService(top500Repo);
+
+const marketGroupRepo = new InMemoryItemRepository();
+const marketGroupScraperService = new MarketGroupScraperService(marketGroupRepo);
 
 registerIngest(app);
 registerItems(app);
 registerScrape(app);
-registerScrapeJson(app, scraperService);
+registerScrapeJson(app, top500ScraperService);
+registerScrapeMarketGroup(app, marketGroupScraperService);
 
 const PORT = Number(Deno.env.get("PORT") || 4000);
 

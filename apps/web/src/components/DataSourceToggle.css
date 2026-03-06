@@ -1,0 +1,42 @@
+.data-source-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.data-source-toggle-label {
+  font-weight: 500;
+  color: #333;
+}
+
+.data-source-toggle-buttons {
+  display: inline-flex;
+  border: 2px solid #ddd;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.data-source-toggle button {
+  padding: 8px 16px;
+  border: none;
+  background-color: #f5f5f5;
+  color: #666;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.data-source-toggle button:not(:first-child) {
+  border-left: 1px solid #ddd;
+}
+
+.data-source-toggle button.active.top500 {
+  background-color: #FF9800;
+  color: white;
+  font-weight: bold;
+}
+
+.data-source-toggle button.active.all {
+  background-color: #9C27B0;
+  color: white;
+  font-weight: bold;
+}
