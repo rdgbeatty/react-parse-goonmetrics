@@ -1,19 +1,19 @@
 import { FC } from "react";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 export const Nav: FC = () => (
   <nav className="site-nav">
     <div className="nav-inner">
       <div className="nav-links">
-        <Link to="/" className="nav-link">
-          Table View
-        </Link>
-        <Link to="/load" className="nav-link">
-          Load Data
-        </Link>
-        <Link to="/browse" className="nav-link">
+        <NavLink to="/imports" className={({ isActive }) => `nav-link${isActive ? " active" : ""}`}>
+          Imports
+        </NavLink>
+        <NavLink to="/exports" className={({ isActive }) => `nav-link${isActive ? " active" : ""}`}>
+          Exports
+        </NavLink>
+        <NavLink to="/browse" className={({ isActive }) => `nav-link${isActive ? " active" : ""}`}>
           Browse Data
-        </Link>
+        </NavLink>
       </div>
     </div>
   </nav>

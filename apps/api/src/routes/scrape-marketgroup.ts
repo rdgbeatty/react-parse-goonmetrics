@@ -1,4 +1,4 @@
-import type { ImportRow } from "@sharedTypes/importRow.ts";
+import type { ScrapedRow } from "@sharedTypes/importRow.ts";
 import { OrderType } from "@sharedTypes/importRow.ts";
 import type { MarketGroupScraperService } from "../services/MarketGroupScraperService.ts";
 
@@ -22,7 +22,7 @@ export function register(app: any, scraperService: MarketGroupScraperService) {
         orderType = orderTypeParam;
       }
 
-      const rows: ImportRow[] = await service.GetAllImportRows(orderType);
+      const rows: ScrapedRow[] = await service.GetAllImportRows(orderType);
       return c.json({ ok: true, rows });
     } catch (err) {
       console.error("Error fetching/parsing market groups:", err);

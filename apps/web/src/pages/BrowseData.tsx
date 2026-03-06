@@ -5,10 +5,10 @@ export const BrowseDataPage: FC = () => {
   return (
     <div>
       <h1 className="page-title">Browse Data</h1>
-      <p> Also TODO </p>
-      <p className="muted">No items yet. Load some data first.</p>
-      <Link to="/load" className="link-primary">
-        Go to Load Data
+      <p>Also TODO.</p>
+      <p className="muted">Browse tools will live here. Use the imports or exports table for now.</p>
+      <Link to="/imports" className="link-primary">
+        Go to Imports
       </Link>
     </div>
   );

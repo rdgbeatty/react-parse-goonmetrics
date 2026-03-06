@@ -5,12 +5,12 @@ export const OrderType = {
 
 export type OrderType = typeof OrderType[keyof typeof OrderType];
 
-export type ImportRow = {
+export type ScrapedRow = {
   id: number;
   itemName: string;
   weekVolume: number;
   jitaPrice: number;
-  importPrice: number;
+  itemVolumeM3: number;
   cjPrice: number;
   markupPercent: number;   // e.g. 120.5 (for "120.5%")
   weekMarkupISK: number;   // ISK per week

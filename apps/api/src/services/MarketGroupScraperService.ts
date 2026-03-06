@@ -1,4 +1,4 @@
-import type { ImportRow, OrderType } from "@sharedTypes/importRow.ts";
+import type { OrderType, ScrapedRow } from "@sharedTypes/importRow.ts";
 import { OrderType as OrderTypeEnum } from "@sharedTypes/importRow.ts";
 import type { ImportRowRepository } from "../repositories/ImportRowRepository.ts";
 import { BaseScraperService, DOMParser, type DomNodeList } from "./BaseScraperService.ts";
@@ -13,11 +13,11 @@ export class MarketGroupScraperService extends BaseScraperService {
     super(repo);
   }
 
-  protected async fetchAndParse(orderType: OrderType): Promise<ImportRow[]> {
+  protected async fetchAndParse(orderType: OrderType): Promise<ScrapedRow[]> {
     const subPagePaths = await this.fetchMarketGroupLinks();
     console.log(`Found ${subPagePaths.length} market group pages to scrape`);
 
-    const allRows: ImportRow[] = [];
+    const allRows: ScrapedRow[] = [];
     const seenItems = new Set<string>();
 
     for (const path of subPagePaths) {
@@ -66,7 +66,7 @@ export class MarketGroupScraperService extends BaseScraperService {
     return links;
   }
 
-  private async fetchAndParseSinglePage(path: string, orderType: OrderType): Promise<ImportRow[]> {
+  private async fetchAndParseSinglePage(path: string, orderType: OrderType): Promise<ScrapedRow[]> {
     let url = `${BASE_URL}${path}`;
     if (orderType === OrderTypeEnum.BUY) {
       url += url.endsWith("/") ? "?from=buy" : "/?from=buy";
@@ -89,14 +89,15 @@ export class MarketGroupScraperService extends BaseScraperService {
   // Market group tables have 9 columns:
   // 0: Item Name, 1: Wk Volume, 2: CJ Stock (skip), 3: CJ Stock % (skip),
   // 4: Jita Price, 5: Import Price, 6: CJ Price, 7: Markup %, 8: Wk Total
-  protected parseRow(tableColumns: DomNodeList, orderType: OrderType): ImportRow {
+  protected parseRow(tableColumns: DomNodeList, orderType: OrderType): ScrapedRow {
     const itemName = (tableColumns.item(0)?.textContent ?? "").trim();
 
     const wkVolume = this.parseNumber(tableColumns.item(1));
     // columns 2-3 are CJ Stock count and % — skip
     const jitaPrice = this.parseNumber(tableColumns.item(4));
     const importPrice = this.parseNumber(tableColumns.item(5));
-    const CJPrice = this.parseNumber(tableColumns.item(6));
+    const itemVolumeM3 = this.parseItemVolumeM3(jitaPrice, importPrice);
+    const cjPrice = this.parseNumber(tableColumns.item(6));
     const markupPct = this.parseNumber(tableColumns.item(7));
     // column 8 (Wk Total) is ignored — buggy in the third-party data source
 
@@ -105,8 +106,8 @@ export class MarketGroupScraperService extends BaseScraperService {
       itemName,
       weekVolume: wkVolume,
       jitaPrice,
-      importPrice,
-      cjPrice: CJPrice,
+      itemVolumeM3,
+      cjPrice,
       markupPercent: markupPct,
       weekMarkupISK: 0,
       orderType,

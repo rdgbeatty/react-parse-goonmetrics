@@ -1,11 +1,11 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { RouterProvider, createHashRouter } from "react-router-dom";
+import { Navigate, RouterProvider, createHashRouter } from "react-router-dom";
 import App from "./App";
-import { LoadDataPage } from "./pages/LoadData";
 import { BrowseDataPage } from "./pages/BrowseData";
-import { TableDataPage } from "./pages/TableData";
+import { ImportsPage } from "./pages/ImportsPage";
+import { ExportsPage } from "./pages/ExportsPage";
 import "./index.css";
 
 const queryClient = new QueryClient();
@@ -17,11 +17,15 @@ const router = createHashRouter([
     children: [
       {
         index: true,
-        element: <TableDataPage />,        
+        element: <Navigate to="/imports" replace />,
       },
       {
-        path: "load",
-        element: <LoadDataPage />,
+        path: "imports",
+        element: <ImportsPage />,
+      },
+      {
+        path: "exports",
+        element: <ExportsPage />,
       },
       {
         path: "browse",

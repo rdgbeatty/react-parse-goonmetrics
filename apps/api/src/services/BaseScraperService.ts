@@ -1,4 +1,4 @@
-import type { ImportRow, OrderType } from "@sharedTypes/importRow.ts";
+import type { OrderType, ScrapedRow } from "@sharedTypes/importRow.ts";
 import { OrderType as OrderTypeEnum } from "@sharedTypes/importRow.ts";
 import type { ImportRowRepository } from "../repositories/ImportRowRepository.ts";
 import {
@@ -37,7 +37,7 @@ export abstract class BaseScraperService {
     }
   }
 
-  async GetAllImportRows(orderType: OrderType = OrderTypeEnum.SELL): Promise<ImportRow[]> {
+  async GetAllImportRows(orderType: OrderType = OrderTypeEnum.SELL): Promise<ScrapedRow[]> {
     if (this.isCacheExpired(orderType)) {
       console.log(`Cache expired for ${orderType} orders, fetching new data...`);
       await this.refetchData(orderType);
@@ -45,7 +45,7 @@ export abstract class BaseScraperService {
     return await this.getOrdersFromRepo(orderType);
   }
 
-  protected async getOrdersFromRepo(orderType: OrderType): Promise<ImportRow[]> {
+  protected async getOrdersFromRepo(orderType: OrderType): Promise<ScrapedRow[]> {
     const allRows = await this.repo.list();
     return allRows.filter(row => row.orderType === orderType);
   }
@@ -64,13 +64,13 @@ export abstract class BaseScraperService {
     await this.repo.addMany(rowsToKeep);
   }
 
-  protected abstract fetchAndParse(orderType: OrderType): Promise<ImportRow[]>;
+  protected abstract fetchAndParse(orderType: OrderType): Promise<ScrapedRow[]>;
 
-  protected abstract parseRow(tableColumns: DomNodeList, orderType: OrderType): ImportRow;
+  protected abstract parseRow(tableColumns: DomNodeList, orderType: OrderType): ScrapedRow;
 
-  protected parseTable(doc: ReturnType<DOMParser["parseFromString"]>, orderType: OrderType): ImportRow[] {
+  protected parseTable(doc: ReturnType<DOMParser["parseFromString"]>, orderType: OrderType): ScrapedRow[] {
     const table = doc.querySelector("table");
-    const rows: ImportRow[] = [];
+    const rows: ScrapedRow[] = [];
 
     if (table) {
       const tableRows = table.querySelectorAll("tr");
@@ -89,5 +89,10 @@ export abstract class BaseScraperService {
     text = text.replace(/%/g, "");
     text = text.replace(/,/g, "").trim();
     return Number(text) || 0;
+  }
+
+  protected parseItemVolumeM3(jitaPrice: number, importPrice: number): number {
+    const legacyTransportCost = importPrice - jitaPrice;
+    return legacyTransportCost > 0 ? legacyTransportCost / 1000 : 0;
   }
 }

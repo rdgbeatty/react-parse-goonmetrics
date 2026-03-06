@@ -1,4 +1,4 @@
-import type { ImportRow, OrderType } from "@sharedTypes/importRow.ts";
+import type { OrderType, ScrapedRow } from "@sharedTypes/importRow.ts";
 import { OrderType as OrderTypeEnum } from "@sharedTypes/importRow.ts";
 import type { ImportRowRepository } from "../repositories/ImportRowRepository.ts";
 import { BaseScraperService, DOMParser, type DomNodeList } from "./BaseScraperService.ts";
@@ -15,7 +15,7 @@ export class Top500ScraperService extends BaseScraperService {
     super(repo);
   }
 
-  protected async fetchAndParse(orderType: OrderType): Promise<ImportRow[]> {
+  protected async fetchAndParse(orderType: OrderType): Promise<ScrapedRow[]> {
     const targetUrl = this.URL_CONFIG[orderType];
 
     const res = await fetch(targetUrl);
@@ -34,13 +34,14 @@ export class Top500ScraperService extends BaseScraperService {
     return this.parseTable(doc, orderType);
   }
 
-  protected parseRow(tableColumns: DomNodeList, orderType: OrderType): ImportRow {
+  protected parseRow(tableColumns: DomNodeList, orderType: OrderType): ScrapedRow {
     const itemName = (tableColumns.item(0)?.textContent ?? "").trim();
 
     const wkVolume = this.parseNumber(tableColumns.item(1));
     const jitaPrice = this.parseNumber(tableColumns.item(2));
     const importPrice = this.parseNumber(tableColumns.item(3));
-    const CJPrice = this.parseNumber(tableColumns.item(4));
+    const itemVolumeM3 = this.parseItemVolumeM3(jitaPrice, importPrice);
+    const cjPrice = this.parseNumber(tableColumns.item(4));
     const markupPct = this.parseNumber(tableColumns.item(5));
     const wkMarkup = this.parseNumber(tableColumns.item(6));
 
@@ -49,8 +50,8 @@ export class Top500ScraperService extends BaseScraperService {
       itemName,
       weekVolume: wkVolume,
       jitaPrice,
-      importPrice,
-      cjPrice: CJPrice,
+      itemVolumeM3,
+      cjPrice,
       markupPercent: markupPct,
       weekMarkupISK: wkMarkup,
       orderType,

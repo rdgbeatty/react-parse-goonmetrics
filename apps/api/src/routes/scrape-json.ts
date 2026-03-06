@@ -1,5 +1,5 @@
 // routes.ts (where your register(app) lives)
-import type { ImportRow } from "@sharedTypes/importRow.ts";
+import type { ScrapedRow } from "@sharedTypes/importRow.ts";
 import { OrderType } from "@sharedTypes/importRow.ts";
 import type { Top500ScraperService } from "../services/Top500ScraperService.ts";
 
@@ -24,7 +24,7 @@ export function register(app: any, scraperService: Top500ScraperService) {
         orderType = orderTypeParam;
       }
 
-      const rows: ImportRow[] = await service.GetAllImportRows(orderType);
+      const rows: ScrapedRow[] = await service.GetAllImportRows(orderType);
       return c.json({ ok: true, rows });
     } catch (err) {
       console.error("Error fetching/parsing:", err);
