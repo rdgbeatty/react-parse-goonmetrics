@@ -7,7 +7,9 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "test": "deno test --config ../api/deno.json --unstable-sloppy-imports src/lib"
+    "test": "deno test --config ../api/deno.json --unstable-sloppy-imports src/lib",
+    "benchmark:sort": "deno bench --config ../api/deno.json --unstable-sloppy-imports src/lib/tradeSorting.bench.ts",
+    "benchmark:render": "deno bench --allow-env=NODE_ENV --config ../api/deno.json --unstable-sloppy-imports src/lib/tradeRender.bench.ts"
   },
   "dependencies": {
     "@tanstack/react-query": "^4.0.0",

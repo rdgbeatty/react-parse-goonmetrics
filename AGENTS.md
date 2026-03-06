@@ -8,7 +8,7 @@ This repo is a small monorepo for scraping and viewing import-market data.
 - `apps/web` is a Vite + React + TypeScript frontend.
 - `packages/shared` contains shared TypeScript types used by both apps.
 
-The current main user flow is the table page in the web app, which fetches parsed rows from the API and computes additional display-only metrics in the browser.
+The current main user flow is the import/export table flow in the web app, which fetches parsed rows from the API and computes additional display-only metrics in the browser.
 
 ## Workspace Layout
 
@@ -31,6 +31,9 @@ Use these from the repo root unless noted otherwise.
 - Start the web app: `pnpm --filter @gm/web dev`
 - Build the web app: `pnpm --filter @gm/web build`
 - Preview the built web app: `pnpm --filter @gm/web preview`
+- Run web lib tests: `pnpm --filter @gm/web test`
+- Benchmark sort-path performance: `pnpm --filter @gm/web benchmark:sort`
+- Benchmark render-path performance: `pnpm --filter @gm/web benchmark:render`
 - Type-check API sources: `deno task check --cwd apps/api`
 - Lint API sources: `deno task lint --cwd apps/api`
 
@@ -46,7 +49,9 @@ The frontend can override the API origin with `VITE_API_BASE_URL`.
 - `Top500ScraperService` uses a 5-minute cache TTL.
 - `MarketGroupScraperService` uses a 1-hour cache TTL.
 - `MarketGroupScraperService` ignores the upstream "Wk Total" column and sets `weekMarkupISK` to `0`.
-- The frontend computes derived profitability and filler-score values locally in `apps/web/src/pages/TableData.tsx`.
+- The frontend computes derived profitability and filler-score values locally in `apps/web/src/lib/tradeCalculations.ts`.
+- The frontend sorts derived rows in `apps/web/src/lib/tradeSorting.ts`.
+- The frontend currently reduces DOM pressure on large datasets with virtualized row rendering in `apps/web/src/components/TradeTable.tsx`.
 
 ## External Site Format
 
@@ -132,8 +137,23 @@ Parsing assumptions:
 - `apps/api/src/routes/items.ts` and `apps/api/src/routes/ingest.ts` are stubs.
 - `apps/api/prisma` is not wired into runtime behavior.
 - The repo may contain in-progress scraper changes; do not assume the API worktree is clean.
-- `TableData.tsx` contains substantial calculation and sorting logic in one file. Small targeted edits are safer than broad refactors unless explicitly requested.
+- The current import/export table flow lives in `apps/web/src/components/TradeTable.tsx` plus `apps/web/src/lib/tradeCalculations.ts`, `apps/web/src/lib/tradeSorting.ts`, and `apps/web/src/lib/tradeVirtualization.ts`.
 - External scraper behavior depends on third-party HTML pages at `goonmetrics.apps.goonswarm.org`; upstream markup changes can break parsing.
+
+## Performance Test Cases
+
+- Use `pnpm --filter @gm/web benchmark:sort` to compare the legacy click path (`computeTradeRows` + sort on every click) against the optimized click path (sort already-derived rows) for:
+  - `500` rows, numeric sort (`weekProfit`)
+  - `500` rows, string sort (`itemName`)
+  - `18000` rows, numeric sort (`weekProfit`)
+  - `18000` rows, string sort (`itemName`)
+- Use `pnpm --filter @gm/web benchmark:render` to compare full DOM table rendering against the virtualized render path for an `18000`-row dataset.
+- Use `pnpm --filter @gm/web test` after performance changes; it currently covers:
+  - market price formatting rules
+  - trade calculation correctness
+  - export filtering for `cjPrice === 0`
+  - sorting helper correctness
+  - virtualization window calculations
 
 ## When Making Changes
 
