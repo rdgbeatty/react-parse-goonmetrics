@@ -29,18 +29,9 @@ const TRADE_ROW_HEIGHT_PX = 38;
 const OVERSCAN_ROWS = 12;
 
 const FillerScoreTooltip: FC = () => {
-  const [showTooltip, setShowTooltip] = useState(false);
-
   return (
-    <span
-      className="filler-score-tooltip-wrapper"
-      onMouseEnter={() => setShowTooltip(true)}
-      onMouseLeave={() => setShowTooltip(false)}
-    >
-      <span className="filler-score-tooltip-icon">ⓘ</span>
-      {showTooltip && (
-        <div className="filler-score-tooltip-content">
-          {`Filler Score Formula
+    <HeaderInfoTooltip
+      content={`Filler Score Formula
 
 Score = (80% × Volume) + (10% × Profit) + (10% × Transport)
 
@@ -59,6 +50,23 @@ Transport Tiers (Diminishing Returns):
 
 Score Range: -15 to 100
 Higher scores = better filler candidates`}
+    />
+  );
+};
+
+const HeaderInfoTooltip: FC<{ content: string }> = ({ content }) => {
+  const [showTooltip, setShowTooltip] = useState(false);
+
+  return (
+    <span
+      className="filler-score-tooltip-wrapper"
+      onMouseEnter={() => setShowTooltip(true)}
+      onMouseLeave={() => setShowTooltip(false)}
+    >
+      <span className="filler-score-tooltip-icon">ⓘ</span>
+      {showTooltip && (
+        <div className="filler-score-tooltip-content">
+          {content}
         </div>
       )}
     </span>
@@ -248,7 +256,7 @@ function buildColumns(
       id: "itemName",
       key: "itemName",
       label: <>Item {renderSortIcon("itemName")}</>,
-      preferredWidth: "34ch",
+      preferredWidth: "42ch",
       headerClassName: "nowrap-header",
       cellClassName: "left-align",
       renderCell: (row) => row.itemName,
@@ -288,8 +296,8 @@ function buildColumns(
     {
       id: "afterExpenseMarginPercent",
       key: "afterExpenseMarginPercent",
-      label: <>After-Expense Margin % {renderSortIcon("afterExpenseMarginPercent")}</>,
-      preferredWidth: "18ch",
+      label: <>Margin % {renderSortIcon("afterExpenseMarginPercent")} <HeaderInfoTooltip content="Net profit per unit as a percentage of import cost after taxes and relists." /></>,
+      preferredWidth: "12ch",
       headerClassName: "nowrap-header",
       renderCell: (row) => `${row.afterExpenseMarginPercent.toFixed(2)}%`,
     },
@@ -299,8 +307,8 @@ function buildColumns(
     columns.push({
       id: "weekMarkupISK",
       key: "weekMarkupISK",
-      label: <>Goonmetrics Wk Profit {renderSortIcon("weekMarkupISK")}</>,
-      preferredWidth: "18ch",
+      label: <>GM Wk Profit {renderSortIcon("weekMarkupISK")} <HeaderInfoTooltip content="Weekly profit reported by Goonmetrics before this app's extra expense adjustments." /></>,
+      preferredWidth: "13ch",
       headerClassName: "nowrap-header",
       renderCell: (row) => formatWholeNumber(row.weekMarkupISK),
     });
@@ -310,24 +318,25 @@ function buildColumns(
     {
       id: "weekProfit",
       key: "weekProfit",
-      label: <>After-Expense Wk Profit {renderSortIcon("weekProfit")}</>,
-      preferredWidth: "18ch",
+      label: <>Net Wk Profit {renderSortIcon("weekProfit")} <HeaderInfoTooltip content="Estimated weekly profit after taxes, relists, and transport are applied." /></>,
+      preferredWidth: "13ch",
       headerClassName: "nowrap-header",
       renderCell: (row) => formatWholeNumber(row.weekProfit),
     },
     {
       id: "fillerScore",
       key: "fillerScore",
-      label: <>Filler Score {renderSortIcon("fillerScore")} <FillerScoreTooltip /></>,
-      preferredWidth: "14ch",
+      label: <>Fill {renderSortIcon("fillerScore")} <FillerScoreTooltip /></>,
+      preferredWidth: "9ch",
       headerClassName: "nowrap-header",
+      description: "Heuristic score for filler suitability using weekly volume, profit, and transport efficiency.",
       renderCell: (row) => formatNumber(row.fillerScore),
     },
     {
       id: "acquisitionPricePerM3",
       key: "acquisitionPricePerM3",
-      label: <>Acquisition Price Per M3 {renderSortIcon("acquisitionPricePerM3")}</>,
-      preferredWidth: "21ch",
+      label: <>Price/M3 {renderSortIcon("acquisitionPricePerM3")} <HeaderInfoTooltip content="Acquisition price divided by item volume, used to judge hauling efficiency." /></>,
+      preferredWidth: "10ch",
       headerClassName: "nowrap-header",
       renderCell: (row) => formatWholeNumber(row.acquisitionPricePerM3),
     },
