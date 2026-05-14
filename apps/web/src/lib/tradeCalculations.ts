@@ -3,7 +3,7 @@ import { TradeRoute, type TradeRoute as TradeRouteType } from "./tradeModes";
 
 const BASE_TAX = 0.0537;
 const RELIST_TAX_PER = 0.003;
-const TRANSPORT_FEE_PER_M3 = 1200;
+const TRANSPORT_FEE_PER_M3 = 700;
 
 const FILLER_WEIGHT_VOL = 0.8;
 const FILLER_WEIGHT_PROFIT = 0.1;
