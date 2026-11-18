@@ -57,3 +57,7 @@ The existing Node collection/history/catalog code is reused. The initial owner G
 Before upload, the owner should inspect both sites locally with `npm start`. Then review the public config, register the production EVE callback (preferably using a separate production application to retain local operation), create the collector environment/writer, commit/push and run the manual publication workflow. Connect/adopt the character, run resume, and inspect a real collection/deployment before treating the hosted path as proven.
 
 The approved install added `libsodium-wrappers@0.8.4` and existing workspace dependencies. The npm audit reports existing toolchain/library advisories in Vite/esbuild, React Router and Zod; details and the constrained runtime exposure are recorded in the operations guide. No forced major upgrade was made. The temporary Deno dependency, full live history catch-up, consecutive-day verification, UI refinements, dependency upgrades and real Actions timings remain tracked in TODO.md.
+
+## First GitHub validation: workflow context correction
+
+The first pushed revision was rejected before jobs started because `runner.temp` was used in job-level `env`, where the runner context is unavailable. Both workflows now set `MARKET_STATE_DIRECTORY` through `GITHUB_ENV` in a runner-executed step. Step-level use in cleanup remains valid. This distinction is not checked by ordinary YAML parsing. [GitHub context availability](https://docs.github.com/en/actions/reference/workflows-and-actions/contexts#context-availability).

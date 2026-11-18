@@ -36,7 +36,6 @@ jobs:
     permissions:
       contents: write
     env:
-      MARKET_STATE_DIRECTORY: ${{ runner.temp }}/market-state
       SITE_BASE: /react-parse-goonmetrics/
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
@@ -46,6 +45,8 @@ jobs:
         with:
           node-version: 24
           cache: npm
+      - name: Set collector state directory
+        run: printf 'MARKET_STATE_DIRECTORY=%s/market-state\n' "$RUNNER_TEMP" >> "$GITHUB_ENV"
       - run: npm ci
       - run: npm run release:collect -- --operation="$MARKET_OPERATION"
         env:
