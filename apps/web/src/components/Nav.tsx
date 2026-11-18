@@ -14,6 +14,9 @@ export const Nav: FC = () => (
         <NavLink to="/browse" className={({ isActive }) => `nav-link${isActive ? " active" : ""}`}>
           Browse Data
         </NavLink>
+        <a href={`${import.meta.env.BASE_URL}market/`} className="nav-link">
+          EVE Markets
+        </a>
       </div>
     </div>
   </nav>

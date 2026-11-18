@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "repository": "rdgbeatty/react-parse-goonmetrics",
+  "branch": "main",
+  "environment": "market-collector",
+  "clientId": "72fd5e9bb12049e59bcd2abb3e5f1af8",
+  "collectorCharacterId": "1056607416",
+  "cjId": "1049588174021",
+  "additionalHubs": [],
+  "contact": "https://github.com/rdgbeatty/react-parse-goonmetrics",
+  "typeLimit": 0,
+  "historyBatchSeconds": 300,
+  "legacyApi": "https://react-parse-goonmetrics.rdgbeatty.deno.net"
+}

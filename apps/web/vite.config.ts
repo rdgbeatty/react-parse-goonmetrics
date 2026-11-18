@@ -4,5 +4,5 @@ import tsconfigPaths from "vite-tsconfig-paths";
 
 export default defineConfig(({ command }) => ({
   plugins: [react(), tsconfigPaths()],
-  base: command === "serve" ? "/" : "/react-parse-goonmetrics/",
+  base: process.env.VITE_PUBLIC_BASE ?? (command === "serve" ? "/" : "/react-parse-goonmetrics/"),
 }));

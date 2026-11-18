@@ -1,10 +1,39 @@
 {
   "private": true,
+  "scripts": {
+    "backend": "node apps/market-backend/start.mjs",
+    "backend:collect": "node apps/market-backend/start.mjs --collect",
+    "backend:catalog": "node apps/market-backend/catalog.mjs",
+    "backend:catalog:check": "node apps/market-backend/catalog.mjs --check",
+    "backend:benchmark": "python3 apps/market-backend/bench/run.py",
+    "backend:benchmark:smoke": "python3 apps/market-backend/bench/run.py --types=100 --repeats=1",
+    "backend:cache:prune-orders": "node apps/market-backend/prune-orders.mjs",
+    "backend:export": "node apps/market-backend/start.mjs --export",
+    "backend:static": "node apps/market-backend/start.mjs --static",
+    "backend:test": "node --test apps/market-backend/test/*.test.mjs",
+    "poc": "node apps/market-backend/start.mjs",
+    "poc:collect": "node apps/market-backend/start.mjs --collect",
+    "poc:export": "node apps/market-backend/start.mjs --export",
+    "poc:static": "node apps/market-backend/start.mjs --static",
+    "poc:test": "node --test apps/market-backend/test/*.test.mjs",
+    "backend:history": "node apps/market-backend/history.mjs",
+    "backend:history:verify": "node apps/market-backend/history.mjs --verify",
+    "backend:benchmark:history": "node apps/market-backend/bench/history.mjs",
+    "backend:quotes": "node apps/market-backend/start.mjs --quotes",
+    "backend:github-check": "node apps/market-backend/spikes/github-only/serve.mjs",
+    "start": "node scripts/preview-site.mjs",
+    "release:build": "node scripts/build-site.mjs",
+    "release:preview": "node scripts/preview-site.mjs --no-build",
+    "release:collect": "node apps/market-backend/hosted.mjs",
+    "test:legacy": "node scripts/test-legacy.mjs",
+    "release:seed": "node scripts/seed-state.mjs"
+  },
   "workspaces": [
     "apps/*",
     "packages/*"
   ],
   "dependencies": {
+    "libsodium-wrappers": "0.8.4",
     "zod": "^4.1.12"
   }
 }

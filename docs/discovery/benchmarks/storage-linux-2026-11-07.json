@@ -1,0 +1,2199 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-11-08T00:35:29.858687+00:00",
+  "environment": {
+    "platform": "Linux-5.15.167.4-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+    "cpu": "Intel(R) Core(TM) i9-14900KF",
+    "logicalCpus": 32,
+    "python": "3.12.3",
+    "sqlite": "3.45.1",
+    "node": "v18.19.1",
+    "temporaryRoot": "/tmp"
+  },
+  "method": {
+    "repeats": 3,
+    "processes": "fresh process for each job; randomized mode order per repetition",
+    "cpu": "wait4 user+system, including waited-for native child; peak RSS is max process RSS, not simultaneous tree sum",
+    "input": "local replay of ESI-shaped JSON plus installed SDE; network/download and fixture generation excluded",
+    "history": "21 retained completed days; next-day full overlapping response with last-three-day corrections; stable missing-day gaps",
+    "packaging": "gzip level 1 proxy measured separately; not an Actions zstd/network measurement",
+    "native": "Node JSON parse/normalization/binary conversion + C read/aggregate/public JSON; all charged; compiler measured separately"
+  },
+  "fixture": {
+    "typeCount": 20000,
+    "syntheticTypes": 268,
+    "sourceDays": 24,
+    "retainedDays": 21,
+    "now": "2026-11-07T17:06:32.671Z",
+    "asOfDay": 20763,
+    "definitions": [
+      {
+        "id": "jita",
+        "locationId": "60003760",
+        "regionId": "10000002"
+      },
+      {
+        "id": "tortuga",
+        "locationId": "1056332656965",
+        "regionId": "10000030"
+      },
+      {
+        "id": "cj6mt",
+        "locationId": "1049588174021",
+        "regionId": "10000009"
+      }
+    ],
+    "catalogSource": "installed CCP SDE",
+    "capturedOrders": 381748,
+    "syntheticOrders": 65396,
+    "orderCount": 447144,
+    "historySeries": 60000,
+    "retainedHistoryRows": 1259379,
+    "inputBytes": {
+      "history-update.json": 151857623,
+      "fixture.json": 118603,
+      "history-input.json": 151851323,
+      "orders-input.json": 103834631,
+      "catalog-input.json": 7643964
+    }
+  },
+  "nativeCompiler": {
+    "wallMs": 274.66499600268435,
+    "cpuMs": 107.67999999999999,
+    "maxRssKiB": 32816
+  },
+  "medians": [
+    {
+      "mode": "node-object-json",
+      "scenario": "bootstrap",
+      "wallMs": 6340.441145002842,
+      "cpuMs": 8791.157,
+      "maxRssKiB": 1184136,
+      "stateBytes": 164974790,
+      "publicBytes": 4669377,
+      "cpuMinMs": 8550.927,
+      "cpuMaxMs": 9788.187
+    },
+    {
+      "mode": "node-object-json",
+      "scenario": "prices",
+      "wallMs": 1067.3002130060922,
+      "cpuMs": 1235.088,
+      "maxRssKiB": 385168,
+      "stateBytes": 164974790,
+      "publicBytes": 4669377,
+      "cpuMinMs": 1216.884,
+      "cpuMaxMs": 1284.038
+    },
+    {
+      "mode": "node-object-json",
+      "scenario": "history",
+      "wallMs": 4431.185659006587,
+      "cpuMs": 5666.994,
+      "maxRssKiB": 1017320,
+      "stateBytes": 164982872,
+      "publicBytes": 4671159,
+      "cpuMinMs": 5606.938,
+      "cpuMaxMs": 5773.464
+    },
+    {
+      "mode": "node-json",
+      "scenario": "bootstrap",
+      "wallMs": 2982.158500002697,
+      "cpuMs": 3873.408,
+      "maxRssKiB": 647980,
+      "stateBytes": 61640123,
+      "publicBytes": 4669377,
+      "cpuMinMs": 3857.317,
+      "cpuMaxMs": 4050.196
+    },
+    {
+      "mode": "node-json",
+      "scenario": "prices",
+      "wallMs": 964.3451750016538,
+      "cpuMs": 1073.024,
+      "maxRssKiB": 385168,
+      "stateBytes": 61640123,
+      "publicBytes": 4669377,
+      "cpuMinMs": 1023.711,
+      "cpuMaxMs": 1100.636
+    },
+    {
+      "mode": "node-json",
+      "scenario": "history",
+      "wallMs": 1887.5079919962445,
+      "cpuMs": 2183.344,
+      "maxRssKiB": 766840,
+      "stateBytes": 61648205,
+      "publicBytes": 4671159,
+      "cpuMinMs": 2165.9120000000003,
+      "cpuMaxMs": 2368.182
+    },
+    {
+      "mode": "node-v8",
+      "scenario": "bootstrap",
+      "wallMs": 3226.9990380009403,
+      "cpuMs": 4618.036,
+      "maxRssKiB": 652896,
+      "stateBytes": 102394761,
+      "publicBytes": 4669377,
+      "cpuMinMs": 4252.99,
+      "cpuMaxMs": 4686.479
+    },
+    {
+      "mode": "node-v8",
+      "scenario": "prices",
+      "wallMs": 951.5492060018005,
+      "cpuMs": 1065.4669999999999,
+      "maxRssKiB": 385168,
+      "stateBytes": 102394761,
+      "publicBytes": 4669377,
+      "cpuMinMs": 1059.855,
+      "cpuMaxMs": 1118.079
+    },
+    {
+      "mode": "node-v8",
+      "scenario": "history",
+      "wallMs": 1860.6033550022403,
+      "cpuMs": 2508.904,
+      "maxRssKiB": 760428,
+      "stateBytes": 102337677,
+      "publicBytes": 4671159,
+      "cpuMinMs": 2477.033,
+      "cpuMaxMs": 2615.101
+    },
+    {
+      "mode": "node-c-binary",
+      "scenario": "bootstrap",
+      "wallMs": 2846.0320299927844,
+      "cpuMs": 3786.8379999999997,
+      "maxRssKiB": 649740,
+      "stateBytes": 88719151,
+      "publicBytes": 5230480,
+      "cpuMinMs": 3613.1980000000003,
+      "cpuMaxMs": 3889.019
+    },
+    {
+      "mode": "node-c-binary",
+      "scenario": "prices",
+      "wallMs": 1011.0907869966468,
+      "cpuMs": 1120.234,
+      "maxRssKiB": 436908,
+      "stateBytes": 88719151,
+      "publicBytes": 5230480,
+      "cpuMinMs": 1071.6,
+      "cpuMaxMs": 1127.631
+    },
+    {
+      "mode": "node-c-binary",
+      "scenario": "history",
+      "wallMs": 1599.0418659930583,
+      "cpuMs": 1933.1000000000001,
+      "maxRssKiB": 596404,
+      "stateBytes": 88719151,
+      "publicBytes": 5232262,
+      "cpuMinMs": 1846.0700000000002,
+      "cpuMaxMs": 2068.4759999999997
+    },
+    {
+      "mode": "python-json",
+      "scenario": "bootstrap",
+      "wallMs": 6838.1366150133545,
+      "cpuMs": 6655.039000000001,
+      "maxRssKiB": 1011252,
+      "stateBytes": 61640123,
+      "publicBytes": 4669377,
+      "cpuMinMs": 6600.618,
+      "cpuMaxMs": 6739.38
+    },
+    {
+      "mode": "python-json",
+      "scenario": "prices",
+      "wallMs": 1444.8229479894508,
+      "cpuMs": 1392.803,
+      "maxRssKiB": 469152,
+      "stateBytes": 61640123,
+      "publicBytes": 4669377,
+      "cpuMinMs": 1293.401,
+      "cpuMaxMs": 1415.53
+    },
+    {
+      "mode": "python-json",
+      "scenario": "history",
+      "wallMs": 5827.310234002653,
+      "cpuMs": 5487.974,
+      "maxRssKiB": 980260,
+      "stateBytes": 61648205,
+      "publicBytes": 4671159,
+      "cpuMinMs": 5109.874,
+      "cpuMaxMs": 5600.372
+    },
+    {
+      "mode": "python-sqlite",
+      "scenario": "bootstrap",
+      "wallMs": 6877.966098996694,
+      "cpuMs": 6639.731,
+      "maxRssKiB": 964240,
+      "stateBytes": 59666432,
+      "publicBytes": 4669377,
+      "cpuMinMs": 6307.245,
+      "cpuMaxMs": 6863.299
+    },
+    {
+      "mode": "python-sqlite",
+      "scenario": "prices",
+      "wallMs": 1488.9834740024526,
+      "cpuMs": 1438.3000000000002,
+      "maxRssKiB": 470552,
+      "stateBytes": 59666432,
+      "publicBytes": 4685787,
+      "cpuMinMs": 1415.94,
+      "cpuMaxMs": 1498.139
+    },
+    {
+      "mode": "python-sqlite",
+      "scenario": "history",
+      "wallMs": 5345.585390998167,
+      "cpuMs": 5214.503,
+      "maxRssKiB": 948316,
+      "stateBytes": 59666432,
+      "publicBytes": 4776847,
+      "cpuMinMs": 5064.004,
+      "cpuMaxMs": 5257.393999999999
+    },
+    {
+      "mode": "python-jsondoc",
+      "scenario": "bootstrap",
+      "wallMs": 10679.239461998804,
+      "cpuMs": 10481.885999999999,
+      "maxRssKiB": 1036860,
+      "stateBytes": 159682560,
+      "publicBytes": 4669377,
+      "cpuMinMs": 10370.898000000001,
+      "cpuMaxMs": 11026.562
+    },
+    {
+      "mode": "python-jsondoc",
+      "scenario": "prices",
+      "wallMs": 1508.061362997978,
+      "cpuMs": 1458.031,
+      "maxRssKiB": 470792,
+      "stateBytes": 159682560,
+      "publicBytes": 4669377,
+      "cpuMinMs": 1399.864,
+      "cpuMaxMs": 1693.077
+    },
+    {
+      "mode": "python-jsondoc",
+      "scenario": "history",
+      "wallMs": 8100.06345200236,
+      "cpuMs": 7732.267999999999,
+      "maxRssKiB": 1003552,
+      "stateBytes": 160796672,
+      "publicBytes": 4671159,
+      "cpuMinMs": 7731.456,
+      "cpuMaxMs": 8317.891
+    },
+    {
+      "mode": "python-jsonb",
+      "scenario": "bootstrap",
+      "wallMs": 10293.804362998344,
+      "cpuMs": 10162.131,
+      "maxRssKiB": 1036276,
+      "stateBytes": 166600704,
+      "publicBytes": 4669377,
+      "cpuMinMs": 9884.943,
+      "cpuMaxMs": 10754.053
+    },
+    {
+      "mode": "python-jsonb",
+      "scenario": "prices",
+      "wallMs": 1456.7197379947174,
+      "cpuMs": 1413.773,
+      "maxRssKiB": 469220,
+      "stateBytes": 166600704,
+      "publicBytes": 4669377,
+      "cpuMinMs": 1401.45,
+      "cpuMaxMs": 1524.36
+    },
+    {
+      "mode": "python-jsonb",
+      "scenario": "history",
+      "wallMs": 7925.921609989018,
+      "cpuMs": 7685.517,
+      "maxRssKiB": 1004928,
+      "stateBytes": 167710720,
+      "publicBytes": 4671159,
+      "cpuMinMs": 7556.291,
+      "cpuMaxMs": 7736.8730000000005
+    },
+    {
+      "mode": "python-dbm",
+      "scenario": "bootstrap",
+      "wallMs": 7813.459102995694,
+      "cpuMs": 7708.7789999999995,
+      "maxRssKiB": 956272,
+      "stateBytes": 70316032,
+      "publicBytes": 4669377,
+      "cpuMinMs": 7625.947,
+      "cpuMaxMs": 7757.057
+    },
+    {
+      "mode": "python-dbm",
+      "scenario": "prices",
+      "wallMs": 1425.8804330020212,
+      "cpuMs": 1373.4449999999997,
+      "maxRssKiB": 471072,
+      "stateBytes": 70316032,
+      "publicBytes": 4669377,
+      "cpuMinMs": 1279.035,
+      "cpuMaxMs": 1401.907
+    },
+    {
+      "mode": "python-dbm",
+      "scenario": "history",
+      "wallMs": 6151.648710001609,
+      "cpuMs": 6033.556,
+      "maxRssKiB": 939472,
+      "stateBytes": 72511488,
+      "publicBytes": 4671159,
+      "cpuMinMs": 5929.861,
+      "cpuMaxMs": 6096.751
+    }
+  ],
+  "runs": [
+    {
+      "repeat": 0,
+      "mode": "node-json",
+      "scenario": "bootstrap",
+      "internalWallMs": 2821.978220999241,
+      "phases": {
+        "source": 2113.490917995572,
+        "store": 597.0825019925833,
+        "process": 58.012180998921394,
+        "publish": 53.07399299740791
+      },
+      "stateBytes": 61640123,
+      "publicBytes": 4669377,
+      "wallMs": 2958.7544620007975,
+      "cpuMs": 3857.317,
+      "maxRssKiB": 647980
+    },
+    {
+      "repeat": 0,
+      "mode": "node-json",
+      "scenario": "prices",
+      "internalWallMs": 805.2479030042887,
+      "phases": {
+        "restore": 12.537266984581947,
+        "source": 703.0403630137444,
+        "store": 33.42409400641918,
+        "publish": 55.833520010113716
+      },
+      "stateBytes": 61640123,
+      "publicBytes": 4669377,
+      "wallMs": 903.6073370079976,
+      "cpuMs": 1023.711,
+      "maxRssKiB": 350916
+    },
+    {
+      "repeat": 0,
+      "mode": "node-json",
+      "scenario": "history",
+      "internalWallMs": 1932.7254170030355,
+      "phases": {
+        "restore": 25.835789993405342,
+        "source": 1136.8008390069008,
+        "store": 649.2701060026884,
+        "process": 65.29514400660992,
+        "publish": 54.94954599440098
+      },
+      "stateBytes": 61648205,
+      "publicBytes": 4671159,
+      "wallMs": 2060.7519460027106,
+      "cpuMs": 2368.182,
+      "maxRssKiB": 766840
+    },
+    {
+      "repeat": 0,
+      "mode": "node-c-binary",
+      "scenario": "bootstrap",
+      "internalWallMs": 2732.6697849929333,
+      "phases": {
+        "source": 2213.9252199828625,
+        "store": 358.63404400646687,
+        "native_process_publish": 159.87529799342155
+      },
+      "stateBytes": 88719151,
+      "publicBytes": 5230480,
+      "wallMs": 2846.0320299927844,
+      "cpuMs": 3786.8379999999997,
+      "maxRssKiB": 648268
+    },
+    {
+      "repeat": 0,
+      "mode": "node-c-binary",
+      "scenario": "prices",
+      "internalWallMs": 873.4012340009212,
+      "phases": {
+        "restore": 10.007234007120132,
+        "source": 700.9029060006142,
+        "store": 29.171346992254257,
+        "native_process_publish": 133.02801299095154
+      },
+      "stateBytes": 88719151,
+      "publicBytes": 5230480,
+      "wallMs": 984.296192007605,
+      "cpuMs": 1071.6,
+      "maxRssKiB": 436908
+    },
+    {
+      "repeat": 0,
+      "mode": "node-c-binary",
+      "scenario": "history",
+      "internalWallMs": 1619.9055020064116,
+      "phases": {
+        "restore": 10.899585992097855,
+        "source": 1198.4197899997234,
+        "store": 241.4866600036621,
+        "native_process_publish": 168.65541000664234
+      },
+      "stateBytes": 88719151,
+      "publicBytes": 5232262,
+      "wallMs": 1737.3924419953255,
+      "cpuMs": 2068.4759999999997,
+      "maxRssKiB": 596404
+    },
+    {
+      "repeat": 0,
+      "mode": "python-dbm",
+      "scenario": "bootstrap",
+      "internalWallMs": 7256.126223001047,
+      "phases": {
+        "source": 4569.45736000489,
+        "store": 1924.7694590012543,
+        "process": 664.2176509922137,
+        "publish": 89.0708750084741
+      },
+      "stateBytes": 70316032,
+      "publicBytes": 4669377,
+      "wallMs": 7813.459102995694,
+      "cpuMs": 7708.7789999999995,
+      "maxRssKiB": 956040
+    },
+    {
+      "repeat": 0,
+      "mode": "python-dbm",
+      "scenario": "prices",
+      "internalWallMs": 1212.3737499932759,
+      "phases": {
+        "restore": 19.156246999045834,
+        "source": 1047.6259909919463,
+        "store": 59.23333299870137,
+        "publish": 85.29690500290599
+      },
+      "stateBytes": 70316032,
+      "publicBytes": 4669377,
+      "wallMs": 1336.4329929900123,
+      "cpuMs": 1279.035,
+      "maxRssKiB": 471072
+    },
+    {
+      "repeat": 0,
+      "mode": "python-dbm",
+      "scenario": "history",
+      "internalWallMs": 5377.789320991724,
+      "phases": {
+        "restore": 50.41703699680511,
+        "source": 3072.7309939975385,
+        "store": 1491.7145070066908,
+        "process": 670.4365379991941,
+        "publish": 90.96428200427908
+      },
+      "stateBytes": 72511488,
+      "publicBytes": 4671159,
+      "wallMs": 5980.156942998292,
+      "cpuMs": 5929.861,
+      "maxRssKiB": 939472
+    },
+    {
+      "repeat": 0,
+      "mode": "python-json",
+      "scenario": "bootstrap",
+      "internalWallMs": 6142.03000201087,
+      "phases": {
+        "source": 4314.3187960085925,
+        "store": 1252.3111710033845,
+        "process": 486.5334210044239,
+        "publish": 88.62817099725362
+      },
+      "stateBytes": 61640123,
+      "publicBytes": 4669377,
+      "wallMs": 6696.178258003783,
+      "cpuMs": 6600.618,
+      "maxRssKiB": 1017560
+    },
+    {
+      "repeat": 0,
+      "mode": "python-json",
+      "scenario": "prices",
+      "internalWallMs": 1213.1503319978947,
+      "phases": {
+        "restore": 20.29165801650379,
+        "source": 1047.9627910099225,
+        "store": 61.893431993667036,
+        "publish": 82.89382599468809
+      },
+      "stateBytes": 61640123,
+      "publicBytes": 4669377,
+      "wallMs": 1342.5860880088294,
+      "cpuMs": 1293.401,
+      "maxRssKiB": 469184
+    },
+    {
+      "repeat": 0,
+      "mode": "python-json",
+      "scenario": "history",
+      "internalWallMs": 4759.486629001913,
+      "phases": {
+        "restore": 43.2586949900724,
+        "source": 3074.106063999352,
+        "store": 1215.2283169998555,
+        "process": 338.7062550027622,
+        "publish": 88.0225029977737
+      },
+      "stateBytes": 61648205,
+      "publicBytes": 4671159,
+      "wallMs": 5295.893408998381,
+      "cpuMs": 5109.874,
+      "maxRssKiB": 980260
+    },
+    {
+      "repeat": 0,
+      "mode": "python-sqlite",
+      "scenario": "bootstrap",
+      "internalWallMs": 6256.787935999455,
+      "phases": {
+        "source": 4434.682623992558,
+        "store": 1418.0635099910432,
+        "process": 223.8106360018719,
+        "publish": 122.06392500957008
+      },
+      "stateBytes": 59666432,
+      "publicBytes": 4669377,
+      "wallMs": 6877.966098996694,
+      "cpuMs": 6639.731,
+      "maxRssKiB": 964404
+    },
+    {
+      "repeat": 0,
+      "mode": "python-sqlite",
+      "scenario": "prices",
+      "internalWallMs": 1423.3159680006793,
+      "phases": {
+        "restore": 52.142977991024964,
+        "source": 1200.3851810004562,
+        "store": 75.22150300792418,
+        "publish": 94.98566600086633
+      },
+      "stateBytes": 59666432,
+      "publicBytes": 4685787,
+      "wallMs": 1569.4644619943574,
+      "cpuMs": 1498.139,
+      "maxRssKiB": 470552
+    },
+    {
+      "repeat": 0,
+      "mode": "python-sqlite",
+      "scenario": "history",
+      "internalWallMs": 4668.512117001228,
+      "phases": {
+        "restore": 68.47776001086459,
+        "source": 3015.9434029919794,
+        "store": 1302.654047991382,
+        "process": 188.21787400520407,
+        "publish": 91.59026299312245
+      },
+      "stateBytes": 59666432,
+      "publicBytes": 4776847,
+      "wallMs": 5218.157524999697,
+      "cpuMs": 5064.004,
+      "maxRssKiB": 948316
+    },
+    {
+      "repeat": 0,
+      "mode": "node-v8",
+      "scenario": "bootstrap",
+      "internalWallMs": 3109.065448999405,
+      "phases": {
+        "source": 2331.4643850177526,
+        "store": 614.1239589750767,
+        "process": 103.36798100173473,
+        "publish": 59.749540001153946
+      },
+      "stateBytes": 102278393,
+      "publicBytes": 4669377,
+      "wallMs": 3226.9990380009403,
+      "cpuMs": 4618.036,
+      "maxRssKiB": 651152
+    },
+    {
+      "repeat": 0,
+      "mode": "node-v8",
+      "scenario": "prices",
+      "internalWallMs": 823.0563219934702,
+      "phases": {
+        "restore": 20.936103001236916,
+        "source": 721.9093659967184,
+        "store": 26.680686995387077,
+        "publish": 53.16617201268673
+      },
+      "stateBytes": 102278393,
+      "publicBytes": 4669377,
+      "wallMs": 943.2471220061416,
+      "cpuMs": 1065.4669999999999,
+      "maxRssKiB": 347508
+    },
+    {
+      "repeat": 0,
+      "mode": "node-v8",
+      "scenario": "history",
+      "internalWallMs": 1825.682029992342,
+      "phases": {
+        "restore": 38.20676800608635,
+        "source": 1041.9200299978256,
+        "store": 562.8247079998255,
+        "process": 108.0549940019846,
+        "publish": 74.14983500540257
+      },
+      "stateBytes": 102382389,
+      "publicBytes": 4671159,
+      "wallMs": 1941.5600610082038,
+      "cpuMs": 2615.101,
+      "maxRssKiB": 760304
+    },
+    {
+      "repeat": 0,
+      "mode": "python-jsondoc",
+      "scenario": "bootstrap",
+      "internalWallMs": 10063.898138992954,
+      "phases": {
+        "source": 4361.674382002093,
+        "store": 3772.3001039994415,
+        "process": 1819.534989001113,
+        "publish": 91.75371899618767
+      },
+      "stateBytes": 159682560,
+      "publicBytes": 4669377,
+      "wallMs": 10679.239461998804,
+      "cpuMs": 10481.885999999999,
+      "maxRssKiB": 1035368
+    },
+    {
+      "repeat": 0,
+      "mode": "python-jsondoc",
+      "scenario": "prices",
+      "internalWallMs": 1607.9687750025187,
+      "phases": {
+        "restore": 29.445597989251837,
+        "source": 1393.0776119959773,
+        "store": 82.71781899384223,
+        "publish": 101.48026600654703
+      },
+      "stateBytes": 159682560,
+      "publicBytes": 4669377,
+      "wallMs": 1760.937320010271,
+      "cpuMs": 1693.077,
+      "maxRssKiB": 470760
+    },
+    {
+      "repeat": 0,
+      "mode": "python-jsondoc",
+      "scenario": "history",
+      "internalWallMs": 7570.113148991368,
+      "phases": {
+        "restore": 62.89473400101997,
+        "source": 3230.3086030005943,
+        "store": 2434.628118004184,
+        "process": 1751.785796994227,
+        "publish": 87.83093999954872
+      },
+      "stateBytes": 160796672,
+      "publicBytes": 4671159,
+      "wallMs": 8100.06345200236,
+      "cpuMs": 7731.456,
+      "maxRssKiB": 1003548
+    },
+    {
+      "repeat": 0,
+      "mode": "python-jsonb",
+      "scenario": "bootstrap",
+      "internalWallMs": 9480.593524000142,
+      "phases": {
+        "source": 4162.32246599975,
+        "store": 3509.84957300534,
+        "process": 1705.8359569928143,
+        "publish": 85.43479100626428
+      },
+      "stateBytes": 166600704,
+      "publicBytes": 4669377,
+      "wallMs": 10054.026033001719,
+      "cpuMs": 9884.943,
+      "maxRssKiB": 1036276
+    },
+    {
+      "repeat": 0,
+      "mode": "python-jsonb",
+      "scenario": "prices",
+      "internalWallMs": 1311.7888480046531,
+      "phases": {
+        "restore": 25.779647010494955,
+        "source": 1092.6550060103182,
+        "store": 71.38298099744134,
+        "publish": 121.02730499464087
+      },
+      "stateBytes": 166600704,
+      "publicBytes": 4669377,
+      "wallMs": 1444.59695299156,
+      "cpuMs": 1401.45,
+      "maxRssKiB": 469220
+    },
+    {
+      "repeat": 0,
+      "mode": "python-jsonb",
+      "scenario": "history",
+      "internalWallMs": 7319.679623004049,
+      "phases": {
+        "restore": 57.89522299892269,
+        "source": 3193.7838699959684,
+        "store": 2247.9330449859845,
+        "process": 1723.6263559898362,
+        "publish": 93.45000100438483
+      },
+      "stateBytes": 167710720,
+      "publicBytes": 4671159,
+      "wallMs": 7984.927058991161,
+      "cpuMs": 7736.8730000000005,
+      "maxRssKiB": 1004992
+    },
+    {
+      "repeat": 0,
+      "mode": "node-object-json",
+      "scenario": "bootstrap",
+      "internalWallMs": 6851.478386998177,
+      "phases": {
+        "source": 2504.8506729900837,
+        "store": 4122.037029996514,
+        "process": 175.29511900246143,
+        "publish": 48.89061500132084
+      },
+      "stateBytes": 164974790,
+      "publicBytes": 4669377,
+      "wallMs": 7026.415449989145,
+      "cpuMs": 9788.187,
+      "maxRssKiB": 1185332
+    },
+    {
+      "repeat": 0,
+      "mode": "node-object-json",
+      "scenario": "prices",
+      "internalWallMs": 939.5214739888906,
+      "phases": {
+        "restore": 32.40950599312782,
+        "source": 706.9031819999218,
+        "store": 143.8517480045557,
+        "publish": 55.95883800089359
+      },
+      "stateBytes": 164974790,
+      "publicBytes": 4669377,
+      "wallMs": 1067.3002130060922,
+      "cpuMs": 1235.088,
+      "maxRssKiB": 382124
+    },
+    {
+      "repeat": 0,
+      "mode": "node-object-json",
+      "scenario": "history",
+      "internalWallMs": 4351.075401008129,
+      "phases": {
+        "restore": 62.65253400802612,
+        "source": 1012.0991679877043,
+        "store": 3074.359144002199,
+        "process": 140.20057700574398,
+        "publish": 61.137765005230904
+      },
+      "stateBytes": 164982872,
+      "publicBytes": 4671159,
+      "wallMs": 4469.689540987019,
+      "cpuMs": 5773.464,
+      "maxRssKiB": 1019936
+    },
+    {
+      "repeat": 1,
+      "mode": "python-jsonb",
+      "scenario": "bootstrap",
+      "internalWallMs": 9703.848175995518,
+      "phases": {
+        "source": 4346.997248008847,
+        "store": 3520.3612219920615,
+        "process": 1731.223612994654,
+        "publish": 90.04864700546023
+      },
+      "stateBytes": 166600704,
+      "publicBytes": 4669377,
+      "wallMs": 10293.804362998344,
+      "cpuMs": 10162.131,
+      "maxRssKiB": 1037244
+    },
+    {
+      "repeat": 1,
+      "mode": "python-jsonb",
+      "scenario": "prices",
+      "internalWallMs": 1312.0932900055777,
+      "phases": {
+        "restore": 24.681463008164428,
+        "source": 1133.4552479966078,
+        "store": 67.52171900006942,
+        "publish": 85.51044898922555
+      },
+      "stateBytes": 166600704,
+      "publicBytes": 4669377,
+      "wallMs": 1456.7197379947174,
+      "cpuMs": 1413.773,
+      "maxRssKiB": 469220
+    },
+    {
+      "repeat": 1,
+      "mode": "python-jsonb",
+      "scenario": "history",
+      "internalWallMs": 7222.119801008375,
+      "phases": {
+        "restore": 60.81741300295107,
+        "source": 3122.591810999438,
+        "store": 2203.541923998273,
+        "process": 1737.9179729905445,
+        "publish": 91.60494200477842
+      },
+      "stateBytes": 167710720,
+      "publicBytes": 4671159,
+      "wallMs": 7896.813999992446,
+      "cpuMs": 7685.517,
+      "maxRssKiB": 1004928
+    },
+    {
+      "repeat": 1,
+      "mode": "python-dbm",
+      "scenario": "bootstrap",
+      "internalWallMs": 7313.505714002531,
+      "phases": {
+        "source": 4584.214458009228,
+        "store": 1950.6668890098808,
+        "process": 672.6013750012498,
+        "publish": 98.1940619967645
+      },
+      "stateBytes": 70316032,
+      "publicBytes": 4669377,
+      "wallMs": 7922.1110259968555,
+      "cpuMs": 7757.057,
+      "maxRssKiB": 956272
+    },
+    {
+      "repeat": 1,
+      "mode": "python-dbm",
+      "scenario": "prices",
+      "internalWallMs": 1290.0338300096337,
+      "phases": {
+        "restore": 20.969542005332187,
+        "source": 1121.1706210015109,
+        "store": 59.07667199790012,
+        "publish": 87.36309400410391
+      },
+      "stateBytes": 70316032,
+      "publicBytes": 4669377,
+      "wallMs": 1425.8804330020212,
+      "cpuMs": 1373.4449999999997,
+      "maxRssKiB": 470996
+    },
+    {
+      "repeat": 1,
+      "mode": "python-dbm",
+      "scenario": "history",
+      "internalWallMs": 5573.594517991296,
+      "phases": {
+        "restore": 50.221272991620935,
+        "source": 3121.4593190088635,
+        "store": 1630.9698789991671,
+        "process": 683.7936329975491,
+        "publish": 85.80310101388022
+      },
+      "stateBytes": 72511488,
+      "publicBytes": 4671159,
+      "wallMs": 6151.648710001609,
+      "cpuMs": 6033.556,
+      "maxRssKiB": 939188
+    },
+    {
+      "repeat": 1,
+      "mode": "python-sqlite",
+      "scenario": "bootstrap",
+      "internalWallMs": 5941.516940001748,
+      "phases": {
+        "source": 4234.742638989701,
+        "store": 1355.2389609831152,
+        "process": 195.19707300059963,
+        "publish": 99.75718898931518
+      },
+      "stateBytes": 59666432,
+      "publicBytes": 4669377,
+      "wallMs": 6549.063687998569,
+      "cpuMs": 6307.245,
+      "maxRssKiB": 964240
+    },
+    {
+      "repeat": 1,
+      "mode": "python-sqlite",
+      "scenario": "prices",
+      "internalWallMs": 1350.2317550010048,
+      "phases": {
+        "restore": 54.49447699356824,
+        "source": 1131.8050079862587,
+        "store": 72.58255399938207,
+        "publish": 90.80254301079549
+      },
+      "stateBytes": 59666432,
+      "publicBytes": 4685787,
+      "wallMs": 1488.9834740024526,
+      "cpuMs": 1438.3000000000002,
+      "maxRssKiB": 470548
+    },
+    {
+      "repeat": 1,
+      "mode": "python-sqlite",
+      "scenario": "history",
+      "internalWallMs": 4726.101807013038,
+      "phases": {
+        "restore": 75.26220699946862,
+        "source": 3048.2700829888927,
+        "store": 1311.4123600098537,
+        "process": 197.3493869882077,
+        "publish": 92.28835100657307
+      },
+      "stateBytes": 59666432,
+      "publicBytes": 4776847,
+      "wallMs": 5345.585390998167,
+      "cpuMs": 5214.503,
+      "maxRssKiB": 946568
+    },
+    {
+      "repeat": 1,
+      "mode": "python-jsondoc",
+      "scenario": "bootstrap",
+      "internalWallMs": 10719.180223997682,
+      "phases": {
+        "source": 4836.817723014974,
+        "store": 3937.9322540044086,
+        "process": 1832.4688160064397,
+        "publish": 94.91428500041366
+      },
+      "stateBytes": 159682560,
+      "publicBytes": 4669377,
+      "wallMs": 11321.137525999802,
+      "cpuMs": 11026.562,
+      "maxRssKiB": 1038312
+    },
+    {
+      "repeat": 1,
+      "mode": "python-jsondoc",
+      "scenario": "prices",
+      "internalWallMs": 1303.1342169997515,
+      "phases": {
+        "restore": 28.191423989483155,
+        "source": 1114.7197090031113,
+        "store": 72.3208359995624,
+        "publish": 86.93709399085492
+      },
+      "stateBytes": 159682560,
+      "publicBytes": 4669377,
+      "wallMs": 1446.5160489926348,
+      "cpuMs": 1399.864,
+      "maxRssKiB": 470856
+    },
+    {
+      "repeat": 1,
+      "mode": "python-jsondoc",
+      "scenario": "history",
+      "internalWallMs": 7294.053867008188,
+      "phases": {
+        "restore": 61.77890700928401,
+        "source": 3074.6290929964744,
+        "store": 2319.0885340009117,
+        "process": 1752.3820450005587,
+        "publish": 83.65891699213535
+      },
+      "stateBytes": 160796672,
+      "publicBytes": 4671159,
+      "wallMs": 7880.35877099901,
+      "cpuMs": 7732.267999999999,
+      "maxRssKiB": 1004188
+    },
+    {
+      "repeat": 1,
+      "mode": "python-json",
+      "scenario": "bootstrap",
+      "internalWallMs": 6225.394822002272,
+      "phases": {
+        "source": 4254.508357989835,
+        "store": 1310.2957149967551,
+        "process": 517.6449049904477,
+        "publish": 142.6503690017853
+      },
+      "stateBytes": 61640123,
+      "publicBytes": 4669377,
+      "wallMs": 6838.1366150133545,
+      "cpuMs": 6655.039000000001,
+      "maxRssKiB": 1011252
+    },
+    {
+      "repeat": 1,
+      "mode": "python-json",
+      "scenario": "prices",
+      "internalWallMs": 1404.6989630005555,
+      "phases": {
+        "restore": 20.690944002126344,
+        "source": 1166.6550259978976,
+        "store": 85.02452699758578,
+        "publish": 132.2084330022335
+      },
+      "stateBytes": 61640123,
+      "publicBytes": 4669377,
+      "wallMs": 1548.8121349917492,
+      "cpuMs": 1415.53,
+      "maxRssKiB": 469152
+    },
+    {
+      "repeat": 1,
+      "mode": "python-json",
+      "scenario": "history",
+      "internalWallMs": 5641.144010005519,
+      "phases": {
+        "restore": 60.22509800095577,
+        "source": 3162.9274599981727,
+        "store": 1860.0093240092974,
+        "process": 451.9255370105384,
+        "publish": 105.85719298978802
+      },
+      "stateBytes": 61648205,
+      "publicBytes": 4671159,
+      "wallMs": 6325.9333390014945,
+      "cpuMs": 5487.974,
+      "maxRssKiB": 980344
+    },
+    {
+      "repeat": 1,
+      "mode": "node-c-binary",
+      "scenario": "bootstrap",
+      "internalWallMs": 2789.784872993827,
+      "phases": {
+        "source": 2236.0441090017557,
+        "store": 393.22442699968815,
+        "native_process_publish": 160.19755299389362
+      },
+      "stateBytes": 88719151,
+      "publicBytes": 5230480,
+      "wallMs": 2908.2199099939317,
+      "cpuMs": 3889.019,
+      "maxRssKiB": 656664
+    },
+    {
+      "repeat": 1,
+      "mode": "node-c-binary",
+      "scenario": "prices",
+      "internalWallMs": 902.0519949942827,
+      "phases": {
+        "restore": 11.679812014102936,
+        "source": 732.2776189893484,
+        "store": 23.277987003326416,
+        "native_process_publish": 134.48945799469948
+      },
+      "stateBytes": 88719151,
+      "publicBytes": 5230480,
+      "wallMs": 1022.916179994354,
+      "cpuMs": 1127.631,
+      "maxRssKiB": 438432
+    },
+    {
+      "repeat": 1,
+      "mode": "node-c-binary",
+      "scenario": "history",
+      "internalWallMs": 1481.6857380121946,
+      "phases": {
+        "restore": 10.623618006706238,
+        "source": 1091.420169994235,
+        "store": 215.3432990014553,
+        "native_process_publish": 163.92520999908447
+      },
+      "stateBytes": 88719151,
+      "publicBytes": 5232262,
+      "wallMs": 1599.0418659930583,
+      "cpuMs": 1933.1000000000001,
+      "maxRssKiB": 596612
+    },
+    {
+      "repeat": 1,
+      "mode": "node-object-json",
+      "scenario": "bootstrap",
+      "internalWallMs": 6201.653514996171,
+      "phases": {
+        "source": 2053.609435006976,
+        "store": 3914.214074999094,
+        "process": 182.0221830010414,
+        "publish": 51.346430987119675
+      },
+      "stateBytes": 164974790,
+      "publicBytes": 4669377,
+      "wallMs": 6340.441145002842,
+      "cpuMs": 8791.157,
+      "maxRssKiB": 1184136
+    },
+    {
+      "repeat": 1,
+      "mode": "node-object-json",
+      "scenario": "prices",
+      "internalWallMs": 1004.7586349993944,
+      "phases": {
+        "restore": 31.86285899579525,
+        "source": 766.8685410022736,
+        "store": 147.10160399973392,
+        "publish": 58.53947898745537
+      },
+      "stateBytes": 164974790,
+      "publicBytes": 4669377,
+      "wallMs": 1117.9793159972178,
+      "cpuMs": 1284.038,
+      "maxRssKiB": 385168
+    },
+    {
+      "repeat": 1,
+      "mode": "node-object-json",
+      "scenario": "history",
+      "internalWallMs": 4312.23561899364,
+      "phases": {
+        "restore": 67.70472499728203,
+        "source": 1011.3020640015602,
+        "store": 3046.9408410042524,
+        "process": 122.89547599852085,
+        "publish": 62.9215449988842
+      },
+      "stateBytes": 164982872,
+      "publicBytes": 4671159,
+      "wallMs": 4431.185659006587,
+      "cpuMs": 5666.994,
+      "maxRssKiB": 1017168
+    },
+    {
+      "repeat": 1,
+      "mode": "node-json",
+      "scenario": "bootstrap",
+      "internalWallMs": 2856.9027020037174,
+      "phases": {
+        "source": 2097.9273139983416,
+        "store": 641.3763040006161,
+        "process": 63.40346500277519,
+        "publish": 53.78717601299286
+      },
+      "stateBytes": 61640123,
+      "publicBytes": 4669377,
+      "wallMs": 2982.158500002697,
+      "cpuMs": 3873.408,
+      "maxRssKiB": 647288
+    },
+    {
+      "repeat": 1,
+      "mode": "node-json",
+      "scenario": "prices",
+      "internalWallMs": 865.8068079948425,
+      "phases": {
+        "restore": 12.873174995183945,
+        "source": 764.0659819990396,
+        "store": 31.239247009158134,
+        "publish": 57.17077900469303
+      },
+      "stateBytes": 61640123,
+      "publicBytes": 4669377,
+      "wallMs": 978.2816759980051,
+      "cpuMs": 1100.636,
+      "maxRssKiB": 385168
+    },
+    {
+      "repeat": 1,
+      "mode": "node-json",
+      "scenario": "history",
+      "internalWallMs": 1746.7818690091372,
+      "phases": {
+        "restore": 25.95347400009632,
+        "source": 983.8028879910707,
+        "store": 603.2728650122881,
+        "process": 72.45480999350548,
+        "publish": 60.66423000395298
+      },
+      "stateBytes": 61648205,
+      "publicBytes": 4671159,
+      "wallMs": 1882.838974997867,
+      "cpuMs": 2183.344,
+      "maxRssKiB": 766988
+    },
+    {
+      "repeat": 1,
+      "mode": "node-v8",
+      "scenario": "bootstrap",
+      "internalWallMs": 3190.8082230091095,
+      "phases": {
+        "source": 2465.3383809924126,
+        "store": 540.1059579849243,
+        "process": 113.28078500926495,
+        "publish": 71.63699999451637
+      },
+      "stateBytes": 102394761,
+      "publicBytes": 4669377,
+      "wallMs": 3334.411212010309,
+      "cpuMs": 4686.479,
+      "maxRssKiB": 654872
+    },
+    {
+      "repeat": 1,
+      "mode": "node-v8",
+      "scenario": "prices",
+      "internalWallMs": 832.5556199997663,
+      "phases": {
+        "restore": 21.983217984437943,
+        "source": 726.7976289987564,
+        "store": 27.466392010450363,
+        "publish": 55.92579099535942
+      },
+      "stateBytes": 102394761,
+      "publicBytes": 4669377,
+      "wallMs": 951.5492060018005,
+      "cpuMs": 1059.855,
+      "maxRssKiB": 385168
+    },
+    {
+      "repeat": 1,
+      "mode": "node-v8",
+      "scenario": "history",
+      "internalWallMs": 1741.7047239989042,
+      "phases": {
+        "restore": 38.21355199813843,
+        "source": 1024.583441004157,
+        "store": 505.25548000633717,
+        "process": 104.48403699696064,
+        "publish": 68.40210899710655
+      },
+      "stateBytes": 101897073,
+      "publicBytes": 4671159,
+      "wallMs": 1860.6033550022403,
+      "cpuMs": 2508.904,
+      "maxRssKiB": 760428
+    },
+    {
+      "repeat": 2,
+      "mode": "node-object-json",
+      "scenario": "bootstrap",
+      "internalWallMs": 6039.5491030067205,
+      "phases": {
+        "source": 2097.229458004236,
+        "store": 3703.8951749950647,
+        "process": 188.94990299642086,
+        "publish": 49.07666300237179
+      },
+      "stateBytes": 164974790,
+      "publicBytes": 4669377,
+      "wallMs": 6168.657499991241,
+      "cpuMs": 8550.927,
+      "maxRssKiB": 1165908
+    },
+    {
+      "repeat": 2,
+      "mode": "node-object-json",
+      "scenario": "prices",
+      "internalWallMs": 943.1463439911604,
+      "phases": {
+        "restore": 32.45688199996948,
+        "source": 712.3352319896221,
+        "store": 146.3419720083475,
+        "publish": 51.60420000553131
+      },
+      "stateBytes": 164974790,
+      "publicBytes": 4669377,
+      "wallMs": 1058.195073987008,
+      "cpuMs": 1216.884,
+      "maxRssKiB": 385168
+    },
+    {
+      "repeat": 2,
+      "mode": "node-object-json",
+      "scenario": "history",
+      "internalWallMs": 4299.312495991588,
+      "phases": {
+        "restore": 69.5759270042181,
+        "source": 1004.9778510034084,
+        "store": 3019.02445499599,
+        "process": 139.57951799035072,
+        "publish": 65.47674299776554
+      },
+      "stateBytes": 164982872,
+      "publicBytes": 4671159,
+      "wallMs": 4415.387852001004,
+      "cpuMs": 5606.938,
+      "maxRssKiB": 1017320
+    },
+    {
+      "repeat": 2,
+      "mode": "node-c-binary",
+      "scenario": "bootstrap",
+      "internalWallMs": 2530.8814750015736,
+      "phases": {
+        "source": 2005.59359100461,
+        "store": 352.2897380143404,
+        "native_process_publish": 172.70472200214863
+      },
+      "stateBytes": 88719151,
+      "publicBytes": 5230480,
+      "wallMs": 2648.14862300409,
+      "cpuMs": 3613.1980000000003,
+      "maxRssKiB": 649740
+    },
+    {
+      "repeat": 2,
+      "mode": "node-c-binary",
+      "scenario": "prices",
+      "internalWallMs": 888.507706001401,
+      "phases": {
+        "restore": 10.816900998353958,
+        "source": 726.8035759925842,
+        "store": 24.013179004192352,
+        "native_process_publish": 126.29421900212765
+      },
+      "stateBytes": 88719151,
+      "publicBytes": 5230480,
+      "wallMs": 1011.0907869966468,
+      "cpuMs": 1120.234,
+      "maxRssKiB": 385168
+    },
+    {
+      "repeat": 2,
+      "mode": "node-c-binary",
+      "scenario": "history",
+      "internalWallMs": 1396.367657005787,
+      "phases": {
+        "restore": 9.777649000287056,
+        "source": 1000.479951992631,
+        "store": 216.94116899371147,
+        "native_process_publish": 168.72262799739838
+      },
+      "stateBytes": 88719151,
+      "publicBytes": 5232262,
+      "wallMs": 1512.7140490076272,
+      "cpuMs": 1846.0700000000002,
+      "maxRssKiB": 596048
+    },
+    {
+      "repeat": 2,
+      "mode": "node-v8",
+      "scenario": "bootstrap",
+      "internalWallMs": 2811.8640870004892,
+      "phases": {
+        "source": 2126.8904630094767,
+        "store": 501.1435430049896,
+        "process": 120.86251300573349,
+        "publish": 62.545644000172615
+      },
+      "stateBytes": 102455361,
+      "publicBytes": 4669377,
+      "wallMs": 2937.9873300058534,
+      "cpuMs": 4252.99,
+      "maxRssKiB": 652896
+    },
+    {
+      "repeat": 2,
+      "mode": "node-v8",
+      "scenario": "prices",
+      "internalWallMs": 864.0283019989729,
+      "phases": {
+        "restore": 19.59435299038887,
+        "source": 750.3364460021257,
+        "store": 30.280187994241714,
+        "publish": 63.41506800055504
+      },
+      "stateBytes": 102455361,
+      "publicBytes": 4669377,
+      "wallMs": 990.6703950109659,
+      "cpuMs": 1118.079,
+      "maxRssKiB": 385168
+    },
+    {
+      "repeat": 2,
+      "mode": "node-v8",
+      "scenario": "history",
+      "internalWallMs": 1693.5311720073223,
+      "phases": {
+        "restore": 36.34137399494648,
+        "source": 1006.9032770097256,
+        "store": 472.0462349951267,
+        "process": 104.94968500733376,
+        "publish": 72.77056699991226
+      },
+      "stateBytes": 102337677,
+      "publicBytes": 4671159,
+      "wallMs": 1820.0392539874883,
+      "cpuMs": 2477.033,
+      "maxRssKiB": 760704
+    },
+    {
+      "repeat": 2,
+      "mode": "python-sqlite",
+      "scenario": "bootstrap",
+      "internalWallMs": 6505.887018007343,
+      "phases": {
+        "source": 4818.4994110051775,
+        "store": 1335.5991809949046,
+        "process": 198.17366301140282,
+        "publish": 97.74956799810752
+      },
+      "stateBytes": 59666432,
+      "publicBytes": 4669377,
+      "wallMs": 7110.3216060000705,
+      "cpuMs": 6863.299,
+      "maxRssKiB": 963764
+    },
+    {
+      "repeat": 2,
+      "mode": "python-sqlite",
+      "scenario": "prices",
+      "internalWallMs": 1335.5026810022537,
+      "phases": {
+        "restore": 55.947119006305,
+        "source": 1116.0167049965821,
+        "store": 75.26744100323413,
+        "publish": 87.56736200302839
+      },
+      "stateBytes": 59666432,
+      "publicBytes": 4685787,
+      "wallMs": 1488.4703200077638,
+      "cpuMs": 1415.94,
+      "maxRssKiB": 470572
+    },
+    {
+      "repeat": 2,
+      "mode": "python-sqlite",
+      "scenario": "history",
+      "internalWallMs": 4832.548441001563,
+      "phases": {
+        "restore": 72.34798598801717,
+        "source": 3122.4323179922067,
+        "store": 1349.8170240054606,
+        "process": 198.94598399696406,
+        "publish": 87.37129799555987
+      },
+      "stateBytes": 59666432,
+      "publicBytes": 4776847,
+      "wallMs": 5439.273784009856,
+      "cpuMs": 5257.393999999999,
+      "maxRssKiB": 949124
+    },
+    {
+      "repeat": 2,
+      "mode": "python-jsondoc",
+      "scenario": "bootstrap",
+      "internalWallMs": 9908.325044001685,
+      "phases": {
+        "source": 4246.472124999855,
+        "store": 3743.0071300041163,
+        "process": 1808.857015988906,
+        "publish": 92.86327600420918
+      },
+      "stateBytes": 159682560,
+      "publicBytes": 4669377,
+      "wallMs": 10509.307615997386,
+      "cpuMs": 10370.898000000001,
+      "maxRssKiB": 1036860
+    },
+    {
+      "repeat": 2,
+      "mode": "python-jsondoc",
+      "scenario": "prices",
+      "internalWallMs": 1364.5716500031995,
+      "phases": {
+        "restore": 27.588864002609625,
+        "source": 1174.694408007781,
+        "store": 72.02423400303815,
+        "publish": 89.31943698553368
+      },
+      "stateBytes": 159682560,
+      "publicBytes": 4669377,
+      "wallMs": 1508.061362997978,
+      "cpuMs": 1458.031,
+      "maxRssKiB": 470792
+    },
+    {
+      "repeat": 2,
+      "mode": "python-jsondoc",
+      "scenario": "history",
+      "internalWallMs": 7921.617461994174,
+      "phases": {
+        "restore": 68.148153994116,
+        "source": 3284.963213998708,
+        "store": 2690.599862005911,
+        "process": 1788.457094997284,
+        "publish": 86.39094799582381
+      },
+      "stateBytes": 160796672,
+      "publicBytes": 4671159,
+      "wallMs": 8515.989192994311,
+      "cpuMs": 8317.891,
+      "maxRssKiB": 1003552
+    },
+    {
+      "repeat": 2,
+      "mode": "node-json",
+      "scenario": "bootstrap",
+      "internalWallMs": 3316.156432002783,
+      "phases": {
+        "source": 2258.1505649983883,
+        "store": 941.7317979931831,
+        "process": 67.50998099148273,
+        "publish": 48.3602460026741
+      },
+      "stateBytes": 61640123,
+      "publicBytes": 4669377,
+      "wallMs": 3449.651774004451,
+      "cpuMs": 4050.196,
+      "maxRssKiB": 649132
+    },
+    {
+      "repeat": 2,
+      "mode": "node-json",
+      "scenario": "prices",
+      "internalWallMs": 847.3102900087833,
+      "phases": {
+        "restore": 14.458364993333817,
+        "source": 743.9132579863071,
+        "store": 30.178026989102364,
+        "publish": 58.33805900812149
+      },
+      "stateBytes": 61640123,
+      "publicBytes": 4669377,
+      "wallMs": 964.3451750016538,
+      "cpuMs": 1073.024,
+      "maxRssKiB": 388732
+    },
+    {
+      "repeat": 2,
+      "mode": "node-json",
+      "scenario": "history",
+      "internalWallMs": 1763.004115998745,
+      "phases": {
+        "restore": 25.0782850086689,
+        "source": 1037.0237710028887,
+        "store": 594.654829993844,
+        "process": 55.208852991461754,
+        "publish": 50.52309399843216
+      },
+      "stateBytes": 61648205,
+      "publicBytes": 4671159,
+      "wallMs": 1887.5079919962445,
+      "cpuMs": 2165.9120000000003,
+      "maxRssKiB": 766652
+    },
+    {
+      "repeat": 2,
+      "mode": "python-dbm",
+      "scenario": "bootstrap",
+      "internalWallMs": 7153.058046009392,
+      "phases": {
+        "source": 4308.414029015694,
+        "store": 2045.5614890088327,
+        "process": 686.1356150038773,
+        "publish": 106.74945700156968
+      },
+      "stateBytes": 70316032,
+      "publicBytes": 4669377,
+      "wallMs": 7765.560219006147,
+      "cpuMs": 7625.947,
+      "maxRssKiB": 956308
+    },
+    {
+      "repeat": 2,
+      "mode": "python-dbm",
+      "scenario": "prices",
+      "internalWallMs": 1319.4956549996277,
+      "phases": {
+        "restore": 21.558723994530737,
+        "source": 1148.3559150074143,
+        "store": 63.0397200002335,
+        "publish": 85.18266100145411
+      },
+      "stateBytes": 70316032,
+      "publicBytes": 4669377,
+      "wallMs": 1456.637609997415,
+      "cpuMs": 1401.907,
+      "maxRssKiB": 471124
+    },
+    {
+      "repeat": 2,
+      "mode": "python-dbm",
+      "scenario": "history",
+      "internalWallMs": 5701.256355998339,
+      "phases": {
+        "restore": 51.08712299261242,
+        "source": 3122.4601459980477,
+        "store": 1744.5871380041353,
+        "process": 691.3821850030217,
+        "publish": 90.24780099571217
+      },
+      "stateBytes": 72511488,
+      "publicBytes": 4671159,
+      "wallMs": 6316.309859001194,
+      "cpuMs": 6096.751,
+      "maxRssKiB": 939592
+    },
+    {
+      "repeat": 2,
+      "mode": "python-jsonb",
+      "scenario": "bootstrap",
+      "internalWallMs": 10359.88631300279,
+      "phases": {
+        "source": 4269.4002380012535,
+        "store": 4211.6250389954075,
+        "process": 1757.266286003869,
+        "publish": 101.96717300277669
+      },
+      "stateBytes": 166600704,
+      "publicBytes": 4669377,
+      "wallMs": 11039.387191005517,
+      "cpuMs": 10754.053,
+      "maxRssKiB": 1035904
+    },
+    {
+      "repeat": 2,
+      "mode": "python-jsonb",
+      "scenario": "prices",
+      "internalWallMs": 1441.7107420013053,
+      "phases": {
+        "restore": 26.8133510107873,
+        "source": 1250.729631006834,
+        "store": 72.74854400020558,
+        "publish": 90.50567800295539
+      },
+      "stateBytes": 166600704,
+      "publicBytes": 4669377,
+      "wallMs": 1585.4115230031312,
+      "cpuMs": 1524.36,
+      "maxRssKiB": 469340
+    },
+    {
+      "repeat": 2,
+      "mode": "python-jsonb",
+      "scenario": "history",
+      "internalWallMs": 7351.962407003157,
+      "phases": {
+        "restore": 54.389507000450976,
+        "source": 3211.4752819907153,
+        "store": 2321.9480970146833,
+        "process": 1673.132866009837,
+        "publish": 88.17761899263132
+      },
+      "stateBytes": 167710720,
+      "publicBytes": 4671159,
+      "wallMs": 7925.921609989018,
+      "cpuMs": 7556.291,
+      "maxRssKiB": 1004316
+    },
+    {
+      "repeat": 2,
+      "mode": "python-json",
+      "scenario": "bootstrap",
+      "internalWallMs": 7116.007297998294,
+      "phases": {
+        "source": 4397.786895002355,
+        "store": 2114.8513620137237,
+        "process": 506.6952759952983,
+        "publish": 96.47810799651779
+      },
+      "stateBytes": 61640123,
+      "publicBytes": 4669377,
+      "wallMs": 7727.327469998272,
+      "cpuMs": 6739.38,
+      "maxRssKiB": 1010968
+    },
+    {
+      "repeat": 2,
+      "mode": "python-json",
+      "scenario": "prices",
+      "internalWallMs": 1305.795272011892,
+      "phases": {
+        "restore": 20.16999300394673,
+        "source": 1140.6491939997068,
+        "store": 61.482734003220685,
+        "publish": 83.38687100331299
+      },
+      "stateBytes": 61640123,
+      "publicBytes": 4669377,
+      "wallMs": 1444.8229479894508,
+      "cpuMs": 1392.803,
+      "maxRssKiB": 469144
+    },
+    {
+      "repeat": 2,
+      "mode": "python-json",
+      "scenario": "history",
+      "internalWallMs": 5237.876736006001,
+      "phases": {
+        "restore": 50.69601599825546,
+        "source": 3459.576527005993,
+        "store": 1295.636305003427,
+        "process": 346.02436900604516,
+        "publish": 85.7878940005321
+      },
+      "stateBytes": 61648205,
+      "publicBytes": 4671159,
+      "wallMs": 5827.310234002653,
+      "cpuMs": 5600.372,
+      "maxRssKiB": 980172
+    }
+  ],
+  "artifacts": [
+    {
+      "mode": "node-json",
+      "repeat": 0,
+      "fullState": {
+        "plainBytes": 61648205,
+        "gzip1Bytes": 6629399,
+        "wallMs": 188.10455199854914,
+        "cpuMs": 185.2399
+      },
+      "priceRestore": {
+        "plainBytes": 2009663,
+        "gzip1Bytes": 439826,
+        "wallMs": 10.792715998832136,
+        "cpuMs": 10.642900000000012
+      }
+    },
+    {
+      "mode": "node-c-binary",
+      "repeat": 0,
+      "fullState": {
+        "plainBytes": 88719151,
+        "gzip1Bytes": 6724190,
+        "wallMs": 213.72149301168974,
+        "cpuMs": 212.82709999999994
+      },
+      "priceRestore": {
+        "plainBytes": 2838879,
+        "gzip1Bytes": 491974,
+        "wallMs": 13.084852005704306,
+        "cpuMs": 13.041499999999928
+      }
+    },
+    {
+      "mode": "python-dbm",
+      "repeat": 0,
+      "fullState": {
+        "plainBytes": 72511488,
+        "gzip1Bytes": 9051097,
+        "wallMs": 273.06430001044646,
+        "cpuMs": 274.13160000000005
+      },
+      "priceRestore": {
+        "plainBytes": 72511488,
+        "gzip1Bytes": 9051097,
+        "wallMs": 267.5592029991094,
+        "cpuMs": 268.6122
+      }
+    },
+    {
+      "mode": "python-json",
+      "repeat": 0,
+      "fullState": {
+        "plainBytes": 61648205,
+        "gzip1Bytes": 6629399,
+        "wallMs": 182.93920200085267,
+        "cpuMs": 181.66140000000007
+      },
+      "priceRestore": {
+        "plainBytes": 2009663,
+        "gzip1Bytes": 439826,
+        "wallMs": 10.19473499036394,
+        "cpuMs": 10.1325000000001
+      }
+    },
+    {
+      "mode": "python-sqlite",
+      "repeat": 0,
+      "fullState": {
+        "plainBytes": 59666432,
+        "gzip1Bytes": 9073491,
+        "wallMs": 241.8889010004932,
+        "cpuMs": 242.66180000000003
+      },
+      "priceRestore": {
+        "plainBytes": 59666432,
+        "gzip1Bytes": 9073491,
+        "wallMs": 246.9431200006511,
+        "cpuMs": 247.7453999999999
+      }
+    },
+    {
+      "mode": "node-v8",
+      "repeat": 0,
+      "fullState": {
+        "plainBytes": 102382389,
+        "gzip1Bytes": 6970902,
+        "wallMs": 218.33932198933326,
+        "cpuMs": 219.35340000000014
+      },
+      "priceRestore": {
+        "plainBytes": 2747281,
+        "gzip1Bytes": 476007,
+        "wallMs": 11.531633004778996,
+        "cpuMs": 11.59539999999959
+      }
+    },
+    {
+      "mode": "python-jsondoc",
+      "repeat": 0,
+      "fullState": {
+        "plainBytes": 160796672,
+        "gzip1Bytes": 9194255,
+        "wallMs": 332.2835729923099,
+        "cpuMs": 332.86850000000004
+      },
+      "priceRestore": {
+        "plainBytes": 160796672,
+        "gzip1Bytes": 9194255,
+        "wallMs": 325.1741120038787,
+        "cpuMs": 325.78
+      }
+    },
+    {
+      "mode": "python-jsonb",
+      "repeat": 0,
+      "fullState": {
+        "plainBytes": 167710720,
+        "gzip1Bytes": 9453165,
+        "wallMs": 396.627433001413,
+        "cpuMs": 392.65599999999966
+      },
+      "priceRestore": {
+        "plainBytes": 167710720,
+        "gzip1Bytes": 9453165,
+        "wallMs": 403.80063898919616,
+        "cpuMs": 400.1751999999996
+      }
+    },
+    {
+      "mode": "node-object-json",
+      "repeat": 0,
+      "fullState": {
+        "plainBytes": 164982872,
+        "gzip1Bytes": 8822930,
+        "wallMs": 307.4352190014906,
+        "cpuMs": 308.24189999999965
+      },
+      "priceRestore": {
+        "plainBytes": 4889663,
+        "gzip1Bytes": 769823,
+        "wallMs": 17.903062005643733,
+        "cpuMs": 17.957700000000187
+      }
+    },
+    {
+      "mode": "python-jsonb",
+      "repeat": 1,
+      "fullState": {
+        "plainBytes": 167710720,
+        "gzip1Bytes": 9453165,
+        "wallMs": 423.9037139923312,
+        "cpuMs": 420.2169000000007
+      },
+      "priceRestore": {
+        "plainBytes": 167710720,
+        "gzip1Bytes": 9453165,
+        "wallMs": 415.03843299869914,
+        "cpuMs": 412.0745000000001
+      }
+    },
+    {
+      "mode": "python-dbm",
+      "repeat": 1,
+      "fullState": {
+        "plainBytes": 72511488,
+        "gzip1Bytes": 9051097,
+        "wallMs": 246.0116750007728,
+        "cpuMs": 246.89739999999995
+      },
+      "priceRestore": {
+        "plainBytes": 72511488,
+        "gzip1Bytes": 9051097,
+        "wallMs": 244.9146619910607,
+        "cpuMs": 245.79919999999956
+      }
+    },
+    {
+      "mode": "python-sqlite",
+      "repeat": 1,
+      "fullState": {
+        "plainBytes": 59666432,
+        "gzip1Bytes": 9073491,
+        "wallMs": 245.28887298947666,
+        "cpuMs": 242.66050000000038
+      },
+      "priceRestore": {
+        "plainBytes": 59666432,
+        "gzip1Bytes": 9073491,
+        "wallMs": 253.13215499045327,
+        "cpuMs": 250.42290000000023
+      }
+    },
+    {
+      "mode": "python-jsondoc",
+      "repeat": 1,
+      "fullState": {
+        "plainBytes": 160796672,
+        "gzip1Bytes": 9194255,
+        "wallMs": 340.64640900760423,
+        "cpuMs": 342.0436999999996
+      },
+      "priceRestore": {
+        "plainBytes": 160796672,
+        "gzip1Bytes": 9194255,
+        "wallMs": 338.45071600808296,
+        "cpuMs": 339.87720000000013
+      }
+    },
+    {
+      "mode": "python-json",
+      "repeat": 1,
+      "fullState": {
+        "plainBytes": 61648205,
+        "gzip1Bytes": 6629399,
+        "wallMs": 179.68986699997913,
+        "cpuMs": 179.14090000000016
+      },
+      "priceRestore": {
+        "plainBytes": 2009663,
+        "gzip1Bytes": 439826,
+        "wallMs": 10.399409991805442,
+        "cpuMs": 10.372500000000784
+      }
+    },
+    {
+      "mode": "node-c-binary",
+      "repeat": 1,
+      "fullState": {
+        "plainBytes": 88719151,
+        "gzip1Bytes": 6724190,
+        "wallMs": 211.08335100871045,
+        "cpuMs": 211.37429999999924
+      },
+      "priceRestore": {
+        "plainBytes": 2838879,
+        "gzip1Bytes": 491974,
+        "wallMs": 12.28770699526649,
+        "cpuMs": 12.31029999999933
+      }
+    },
+    {
+      "mode": "node-object-json",
+      "repeat": 1,
+      "fullState": {
+        "plainBytes": 164982872,
+        "gzip1Bytes": 8822930,
+        "wallMs": 314.6106280037202,
+        "cpuMs": 315.97709999999955
+      },
+      "priceRestore": {
+        "plainBytes": 4889663,
+        "gzip1Bytes": 769823,
+        "wallMs": 17.802087997552007,
+        "cpuMs": 17.885599999999613
+      }
+    },
+    {
+      "mode": "node-json",
+      "repeat": 1,
+      "fullState": {
+        "plainBytes": 61648205,
+        "gzip1Bytes": 6629399,
+        "wallMs": 192.5830969994422,
+        "cpuMs": 190.30910000000034
+      },
+      "priceRestore": {
+        "plainBytes": 2009663,
+        "gzip1Bytes": 439826,
+        "wallMs": 10.77880799130071,
+        "cpuMs": 10.618499999999642
+      }
+    },
+    {
+      "mode": "node-v8",
+      "repeat": 1,
+      "fullState": {
+        "plainBytes": 101897073,
+        "gzip1Bytes": 6961353,
+        "wallMs": 225.44619400287047,
+        "cpuMs": 224.48150000000135
+      },
+      "priceRestore": {
+        "plainBytes": 2261965,
+        "gzip1Bytes": 466458,
+        "wallMs": 11.482970003271475,
+        "cpuMs": 11.440099999999731
+      }
+    },
+    {
+      "mode": "node-object-json",
+      "repeat": 2,
+      "fullState": {
+        "plainBytes": 164982872,
+        "gzip1Bytes": 8822930,
+        "wallMs": 309.86916000256315,
+        "cpuMs": 310.86889999999914
+      },
+      "priceRestore": {
+        "plainBytes": 4889663,
+        "gzip1Bytes": 769823,
+        "wallMs": 17.50421099131927,
+        "cpuMs": 17.565599999999293
+      }
+    },
+    {
+      "mode": "node-c-binary",
+      "repeat": 2,
+      "fullState": {
+        "plainBytes": 88719151,
+        "gzip1Bytes": 6724190,
+        "wallMs": 213.7378719926346,
+        "cpuMs": 214.65339999999955
+      },
+      "priceRestore": {
+        "plainBytes": 2838879,
+        "gzip1Bytes": 491974,
+        "wallMs": 12.609246012289077,
+        "cpuMs": 12.682099999999252
+      }
+    },
+    {
+      "mode": "node-v8",
+      "repeat": 2,
+      "fullState": {
+        "plainBytes": 102337677,
+        "gzip1Bytes": 6972407,
+        "wallMs": 221.15527099231258,
+        "cpuMs": 222.19480000000047
+      },
+      "priceRestore": {
+        "plainBytes": 2702569,
+        "gzip1Bytes": 477512,
+        "wallMs": 11.643793986877427,
+        "cpuMs": 11.70819999999928
+      }
+    },
+    {
+      "mode": "python-sqlite",
+      "repeat": 2,
+      "fullState": {
+        "plainBytes": 59666432,
+        "gzip1Bytes": 9073491,
+        "wallMs": 247.10384299396537,
+        "cpuMs": 247.30470000000082
+      },
+      "priceRestore": {
+        "plainBytes": 59666432,
+        "gzip1Bytes": 9073491,
+        "wallMs": 243.63279700628482,
+        "cpuMs": 243.83219999999994
+      }
+    },
+    {
+      "mode": "python-jsondoc",
+      "repeat": 2,
+      "fullState": {
+        "plainBytes": 160796672,
+        "gzip1Bytes": 9194255,
+        "wallMs": 345.0161069922615,
+        "cpuMs": 340.55389999999977
+      },
+      "priceRestore": {
+        "plainBytes": 160796672,
+        "gzip1Bytes": 9194255,
+        "wallMs": 346.779516999959,
+        "cpuMs": 342.2932000000003
+      }
+    },
+    {
+      "mode": "node-json",
+      "repeat": 2,
+      "fullState": {
+        "plainBytes": 61648205,
+        "gzip1Bytes": 6629399,
+        "wallMs": 174.4610419991659,
+        "cpuMs": 174.1052000000014
+      },
+      "priceRestore": {
+        "plainBytes": 2009663,
+        "gzip1Bytes": 439826,
+        "wallMs": 9.981366994907148,
+        "cpuMs": 9.968399999999988
+      }
+    },
+    {
+      "mode": "python-dbm",
+      "repeat": 2,
+      "fullState": {
+        "plainBytes": 72511488,
+        "gzip1Bytes": 9051097,
+        "wallMs": 245.57428299158346,
+        "cpuMs": 246.66180000000003
+      },
+      "priceRestore": {
+        "plainBytes": 72511488,
+        "gzip1Bytes": 9051097,
+        "wallMs": 242.7148400020087,
+        "cpuMs": 243.7927000000002
+      }
+    },
+    {
+      "mode": "python-jsonb",
+      "repeat": 2,
+      "fullState": {
+        "plainBytes": 167710720,
+        "gzip1Bytes": 9453165,
+        "wallMs": 354.6088129951386,
+        "cpuMs": 355.15270000000146
+      },
+      "priceRestore": {
+        "plainBytes": 167710720,
+        "gzip1Bytes": 9453165,
+        "wallMs": 347.5924649974331,
+        "cpuMs": 348.25909999999993
+      }
+    },
+    {
+      "mode": "python-json",
+      "repeat": 2,
+      "fullState": {
+        "plainBytes": 61648205,
+        "gzip1Bytes": 6629399,
+        "wallMs": 172.7901970007224,
+        "cpuMs": 173.58810000000346
+      },
+      "priceRestore": {
+        "plainBytes": 2009663,
+        "gzip1Bytes": 439826,
+        "wallMs": 10.324928996851668,
+        "cpuMs": 10.382400000001013
+      }
+    }
+  ],
+  "semanticEquality": true
+}

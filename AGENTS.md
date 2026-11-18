@@ -161,3 +161,14 @@ Parsing assumptions:
 - If a change affects table behavior, verify both data sources: `top500` and `marketgroup`.
 - Prefer adding logic to the scraper services or shared types instead of duplicating transformation logic across routes.
 - Keep new setup instructions accurate for Windows-friendly local development, since this repo appears to be used that way today.
+
+## Combined release and GitHub collector (2026-11-18)
+
+- `apps/market-backend` is the Node local collector and plain-JavaScript modern viewer. It is not React. `npm run backend` retains its local setup/history UI.
+- `npm start` builds/previews both sites at the real Pages subpath. `npm run release:build` creates the explicit public-only `dist/` artifact; `npm run release:preview` serves an existing build.
+- The original React app stays at the root and keeps its live Deno scraper; the modern viewer is `/market/`. Preserve independent HTML/CSS and navigation between them.
+- Release dependency manager is npm/package-lock.json; use `npm ci`. No install or remote publication without the owner's applicable authorization.
+- `npm run backend:test` includes hosted credential/state/build tests and needs the installed release dependency. `npm run test:legacy` runs the original pure library tests with Node/esbuild, without installing Deno.
+- `config/market.json` is a validated public allowlist. Credentials belong in ignored local private files or Actions environment Secrets, never config/source/Pages/state archives/workflow inputs.
+- `.github/workflows` are manual-only. Adoption, collection and publication share concurrency. Do not enable schedules or push triggers while dormant.
+- `docs/deployment.md` is the setup/recovery runbook; `docs/discovery/12-combined-release.md` records decisions and evidence. A locally successful build is not a proven GitHub deployment.

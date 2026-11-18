@@ -1,0 +1,542 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-11-08T00:41:12.890145+00:00",
+  "environment": {
+    "platform": "Linux-5.15.167.4-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+    "cpu": "Intel(R) Core(TM) i9-14900KF",
+    "logicalCpus": 32,
+    "python": "3.12.3",
+    "sqlite": "3.45.1",
+    "node": "v18.19.1",
+    "temporaryRoot": "/tmp"
+  },
+  "method": {
+    "repeats": 3,
+    "processes": "fresh process for each job; randomized mode order per repetition",
+    "cpu": "wait4 user+system, including waited-for native child; peak RSS is max process RSS, not simultaneous tree sum",
+    "input": "local replay of ESI-shaped JSON plus installed SDE; network/download and fixture generation excluded",
+    "history": "21 retained completed days; next-day full overlapping response with last-three-day corrections; stable missing-day gaps",
+    "packaging": "gzip level 1 proxy measured separately; not an Actions zstd/network measurement",
+    "native": "Node JSON parse/normalization/binary conversion + C read/aggregate/public JSON; all charged; compiler measured separately"
+  },
+  "fixture": {
+    "typeCount": 20000,
+    "syntheticTypes": 268,
+    "sourceDays": 24,
+    "retainedDays": 21,
+    "now": "2026-11-07T17:06:32.671Z",
+    "asOfDay": 20763,
+    "definitions": [
+      {
+        "id": "jita",
+        "locationId": "60003760",
+        "regionId": "10000002"
+      },
+      {
+        "id": "tortuga",
+        "locationId": "1056332656965",
+        "regionId": "10000030"
+      },
+      {
+        "id": "cj6mt",
+        "locationId": "1049588174021",
+        "regionId": "10000009"
+      }
+    ],
+    "catalogSource": "installed CCP SDE",
+    "capturedOrders": 381748,
+    "syntheticOrders": 65396,
+    "orderCount": 447144,
+    "historySeries": 60000,
+    "retainedHistoryRows": 1259379,
+    "inputBytes": {
+      "history-update.json": 151857623,
+      "fixture.json": 118603,
+      "history-input.json": 151851323,
+      "orders-input.json": 103834631,
+      "catalog-input.json": 7643964
+    }
+  },
+  "nativeCompiler": null,
+  "medians": [
+    {
+      "mode": "python-jsondoc-rowid",
+      "scenario": "bootstrap",
+      "wallMs": 9557.098675999441,
+      "cpuMs": 9413.24,
+      "maxRssKiB": 1037188,
+      "stateBytes": 67571712,
+      "publicBytes": 4669377,
+      "cpuMinMs": 8861.945,
+      "cpuMaxMs": 9424.741
+    },
+    {
+      "mode": "python-jsondoc-rowid",
+      "scenario": "prices",
+      "wallMs": 1630.444661990623,
+      "cpuMs": 1581.963,
+      "maxRssKiB": 469856,
+      "stateBytes": 67571712,
+      "publicBytes": 4669377,
+      "cpuMinMs": 1504.861,
+      "cpuMaxMs": 1672.1920000000002
+    },
+    {
+      "mode": "python-jsondoc-rowid",
+      "scenario": "history",
+      "wallMs": 8169.097035002778,
+      "cpuMs": 7926.955999999999,
+      "maxRssKiB": 1000472,
+      "stateBytes": 68685824,
+      "publicBytes": 4671159,
+      "cpuMinMs": 7888.598,
+      "cpuMaxMs": 8159.588
+    },
+    {
+      "mode": "python-jsonb-rowid",
+      "scenario": "bootstrap",
+      "wallMs": 8974.106950990972,
+      "cpuMs": 8709.487,
+      "maxRssKiB": 1036304,
+      "stateBytes": 67514368,
+      "publicBytes": 4669377,
+      "cpuMinMs": 8666.253999999999,
+      "cpuMaxMs": 9162.127999999999
+    },
+    {
+      "mode": "python-jsonb-rowid",
+      "scenario": "prices",
+      "wallMs": 1574.808972000028,
+      "cpuMs": 1513.4289999999999,
+      "maxRssKiB": 469800,
+      "stateBytes": 67514368,
+      "publicBytes": 4669377,
+      "cpuMinMs": 1468.8949999999998,
+      "cpuMaxMs": 1696.8349999999998
+    },
+    {
+      "mode": "python-jsonb-rowid",
+      "scenario": "history",
+      "wallMs": 8028.614713010029,
+      "cpuMs": 7888.911,
+      "maxRssKiB": 1001040,
+      "stateBytes": 68620288,
+      "publicBytes": 4671159,
+      "cpuMinMs": 7792.358,
+      "cpuMaxMs": 8203.122000000001
+    }
+  ],
+  "runs": [
+    {
+      "repeat": 0,
+      "mode": "python-jsonb-rowid",
+      "scenario": "bootstrap",
+      "internalWallMs": 8345.331889999215,
+      "phases": {
+        "source": 4586.487572014448,
+        "store": 1906.968092007446,
+        "process": 1738.2756040024105,
+        "publish": 95.77470600197557
+      },
+      "stateBytes": 67514368,
+      "publicBytes": 4669377,
+      "wallMs": 8974.106950990972,
+      "cpuMs": 8709.487,
+      "maxRssKiB": 1036248
+    },
+    {
+      "repeat": 0,
+      "mode": "python-jsonb-rowid",
+      "scenario": "prices",
+      "internalWallMs": 1422.8559850016609,
+      "phases": {
+        "restore": 25.96815599827096,
+        "source": 1232.0907020039158,
+        "store": 74.44573199609295,
+        "publish": 89.88081499410328
+      },
+      "stateBytes": 67514368,
+      "publicBytes": 4669377,
+      "wallMs": 1574.808972000028,
+      "cpuMs": 1513.4289999999999,
+      "maxRssKiB": 469800
+    },
+    {
+      "repeat": 0,
+      "mode": "python-jsonb-rowid",
+      "scenario": "history",
+      "internalWallMs": 7345.933620003052,
+      "phases": {
+        "restore": 51.704190991586074,
+        "source": 3419.4437159894733,
+        "store": 1995.1881539891474,
+        "process": 1788.6278229998425,
+        "publish": 89.02322099311277
+      },
+      "stateBytes": 68620288,
+      "publicBytes": 4671159,
+      "wallMs": 8028.614713010029,
+      "cpuMs": 7888.911,
+      "maxRssKiB": 1001040
+    },
+    {
+      "repeat": 0,
+      "mode": "python-jsondoc-rowid",
+      "scenario": "bootstrap",
+      "internalWallMs": 8838.562306002132,
+      "phases": {
+        "source": 4654.830446001142,
+        "store": 2139.3104769813363,
+        "process": 1923.7933900003554,
+        "publish": 102.37542100367136
+      },
+      "stateBytes": 67571712,
+      "publicBytes": 4669377,
+      "wallMs": 9557.098675999441,
+      "cpuMs": 9424.741,
+      "maxRssKiB": 1037144
+    },
+    {
+      "repeat": 0,
+      "mode": "python-jsondoc-rowid",
+      "scenario": "prices",
+      "internalWallMs": 1466.2755129975267,
+      "phases": {
+        "restore": 28.801747001125477,
+        "source": 1273.7471569998888,
+        "store": 74.88087200908922,
+        "publish": 88.32048400654458
+      },
+      "stateBytes": 67571712,
+      "publicBytes": 4669377,
+      "wallMs": 1630.444661990623,
+      "cpuMs": 1581.963,
+      "maxRssKiB": 469784
+    },
+    {
+      "repeat": 0,
+      "mode": "python-jsondoc-rowid",
+      "scenario": "history",
+      "internalWallMs": 7560.586794003029,
+      "phases": {
+        "restore": 75.8794199937256,
+        "source": 3390.418826995301,
+        "store": 2076.142025005538,
+        "process": 1903.4536120016128,
+        "publish": 107.89002999081276
+      },
+      "stateBytes": 68685824,
+      "publicBytes": 4671159,
+      "wallMs": 8346.951168001397,
+      "cpuMs": 8159.588,
+      "maxRssKiB": 1000472
+    },
+    {
+      "repeat": 1,
+      "mode": "python-jsonb-rowid",
+      "scenario": "bootstrap",
+      "internalWallMs": 8624.060861009639,
+      "phases": {
+        "source": 4813.4738500084495,
+        "store": 1863.401183989481,
+        "process": 1815.9503470087657,
+        "publish": 109.81889000686351
+      },
+      "stateBytes": 67514368,
+      "publicBytes": 4669377,
+      "wallMs": 9363.112402992556,
+      "cpuMs": 9162.127999999999,
+      "maxRssKiB": 1036304
+    },
+    {
+      "repeat": 1,
+      "mode": "python-jsonb-rowid",
+      "scenario": "prices",
+      "internalWallMs": 1588.5578359884676,
+      "phases": {
+        "restore": 25.302594003733248,
+        "source": 1397.3868719913298,
+        "store": 68.209889010177,
+        "publish": 97.13663200091105
+      },
+      "stateBytes": 67514368,
+      "publicBytes": 4669377,
+      "wallMs": 1757.8343479981413,
+      "cpuMs": 1696.8349999999998,
+      "maxRssKiB": 469888
+    },
+    {
+      "repeat": 1,
+      "mode": "python-jsonb-rowid",
+      "scenario": "history",
+      "internalWallMs": 7206.925216989475,
+      "phases": {
+        "restore": 54.56084800243843,
+        "source": 3349.374501995044,
+        "store": 1991.9222410098882,
+        "process": 1721.3757179997629,
+        "publish": 87.72161400702316
+      },
+      "stateBytes": 68620288,
+      "publicBytes": 4671159,
+      "wallMs": 7883.205770995119,
+      "cpuMs": 7792.358,
+      "maxRssKiB": 1001112
+    },
+    {
+      "repeat": 1,
+      "mode": "python-jsondoc-rowid",
+      "scenario": "bootstrap",
+      "internalWallMs": 8340.437570004724,
+      "phases": {
+        "source": 4453.197791997809,
+        "store": 1936.7522090033162,
+        "process": 1835.4207340016728,
+        "publish": 95.55897800601088
+      },
+      "stateBytes": 67571712,
+      "publicBytes": 4669377,
+      "wallMs": 8975.886180996895,
+      "cpuMs": 8861.945,
+      "maxRssKiB": 1037188
+    },
+    {
+      "repeat": 1,
+      "mode": "python-jsondoc-rowid",
+      "scenario": "prices",
+      "internalWallMs": 1441.6644669981906,
+      "phases": {
+        "restore": 27.439568992122076,
+        "source": 1249.1966910019983,
+        "store": 75.74258999375161,
+        "publish": 88.81240799382795
+      },
+      "stateBytes": 67571712,
+      "publicBytes": 4669377,
+      "wallMs": 1591.4579379896168,
+      "cpuMs": 1504.861,
+      "maxRssKiB": 469892
+    },
+    {
+      "repeat": 1,
+      "mode": "python-jsondoc-rowid",
+      "scenario": "history",
+      "internalWallMs": 7469.073774991557,
+      "phases": {
+        "restore": 83.10910301224794,
+        "source": 3315.0497710012132,
+        "store": 2061.4265510084806,
+        "process": 1914.2665160034085,
+        "publish": 92.39010600140318
+      },
+      "stateBytes": 68685824,
+      "publicBytes": 4671159,
+      "wallMs": 8169.097035002778,
+      "cpuMs": 7926.955999999999,
+      "maxRssKiB": 1000728
+    },
+    {
+      "repeat": 2,
+      "mode": "python-jsondoc-rowid",
+      "scenario": "bootstrap",
+      "internalWallMs": 8743.328932003351,
+      "phases": {
+        "source": 4645.735416008392,
+        "store": 1981.061195008806,
+        "process": 1979.8817120026797,
+        "publish": 110.68781699577812
+      },
+      "stateBytes": 67571712,
+      "publicBytes": 4669377,
+      "wallMs": 9588.582958007464,
+      "cpuMs": 9413.24,
+      "maxRssKiB": 1037244
+    },
+    {
+      "repeat": 2,
+      "mode": "python-jsondoc-rowid",
+      "scenario": "prices",
+      "internalWallMs": 1549.3244960089214,
+      "phases": {
+        "restore": 30.396809001103975,
+        "source": 1358.4901420108508,
+        "store": 73.99360800627619,
+        "publish": 85.89874400058761
+      },
+      "stateBytes": 67571712,
+      "publicBytes": 4669377,
+      "wallMs": 1719.2608710029162,
+      "cpuMs": 1672.1920000000002,
+      "maxRssKiB": 469856
+    },
+    {
+      "repeat": 2,
+      "mode": "python-jsondoc-rowid",
+      "scenario": "history",
+      "internalWallMs": 7308.013491012389,
+      "phases": {
+        "restore": 61.589737990288995,
+        "source": 3369.2321950074984,
+        "store": 1966.9951200048672,
+        "process": 1825.691584002925,
+        "publish": 82.49715701094829
+      },
+      "stateBytes": 68685824,
+      "publicBytes": 4671159,
+      "wallMs": 7967.828856999404,
+      "cpuMs": 7888.598,
+      "maxRssKiB": 1000472
+    },
+    {
+      "repeat": 2,
+      "mode": "python-jsonb-rowid",
+      "scenario": "bootstrap",
+      "internalWallMs": 8264.967825001804,
+      "phases": {
+        "source": 4496.089222986484,
+        "store": 1902.2166390059283,
+        "process": 1758.4771310066571,
+        "publish": 90.33565000572708
+      },
+      "stateBytes": 67514368,
+      "publicBytes": 4669377,
+      "wallMs": 8942.396992002614,
+      "cpuMs": 8666.253999999999,
+      "maxRssKiB": 1038460
+    },
+    {
+      "repeat": 2,
+      "mode": "python-jsonb-rowid",
+      "scenario": "prices",
+      "internalWallMs": 1374.626442004228,
+      "phases": {
+        "restore": 24.32801701070275,
+        "source": 1173.252983004204,
+        "store": 74.2648419982288,
+        "publish": 102.28449699934572
+      },
+      "stateBytes": 67514368,
+      "publicBytes": 4669377,
+      "wallMs": 1534.2150030046469,
+      "cpuMs": 1468.8949999999998,
+      "maxRssKiB": 469768
+    },
+    {
+      "repeat": 2,
+      "mode": "python-jsonb-rowid",
+      "scenario": "history",
+      "internalWallMs": 7794.278098008363,
+      "phases": {
+        "restore": 54.93875400861725,
+        "source": 3588.4300530015025,
+        "store": 2355.400793021545,
+        "process": 1708.3966479985975,
+        "publish": 84.91913699253928
+      },
+      "stateBytes": 68620288,
+      "publicBytes": 4671159,
+      "wallMs": 8418.157776002772,
+      "cpuMs": 8203.122000000001,
+      "maxRssKiB": 1001040
+    }
+  ],
+  "artifacts": [
+    {
+      "mode": "python-jsonb-rowid",
+      "repeat": 0,
+      "fullState": {
+        "plainBytes": 68620288,
+        "gzip1Bytes": 8633206,
+        "wallMs": 233.3403289958369,
+        "cpuMs": 233.86380000000005
+      },
+      "priceRestore": {
+        "plainBytes": 68620288,
+        "gzip1Bytes": 8633206,
+        "wallMs": 236.29635199904442,
+        "cpuMs": 236.82840000000004
+      }
+    },
+    {
+      "mode": "python-jsondoc-rowid",
+      "repeat": 0,
+      "fullState": {
+        "plainBytes": 68685824,
+        "gzip1Bytes": 8397560,
+        "wallMs": 291.59003699896857,
+        "cpuMs": 288.76299999999986
+      },
+      "priceRestore": {
+        "plainBytes": 68685824,
+        "gzip1Bytes": 8397560,
+        "wallMs": 251.2071810051566,
+        "cpuMs": 248.77769999999998
+      }
+    },
+    {
+      "mode": "python-jsonb-rowid",
+      "repeat": 1,
+      "fullState": {
+        "plainBytes": 68620288,
+        "gzip1Bytes": 8633206,
+        "wallMs": 240.61204800091218,
+        "cpuMs": 241.96630000000007
+      },
+      "priceRestore": {
+        "plainBytes": 68620288,
+        "gzip1Bytes": 8633206,
+        "wallMs": 234.25600898917764,
+        "cpuMs": 235.57739999999993
+      }
+    },
+    {
+      "mode": "python-jsondoc-rowid",
+      "repeat": 1,
+      "fullState": {
+        "plainBytes": 68685824,
+        "gzip1Bytes": 8397560,
+        "wallMs": 247.29814600141253,
+        "cpuMs": 246.8705
+      },
+      "priceRestore": {
+        "plainBytes": 68685824,
+        "gzip1Bytes": 8397560,
+        "wallMs": 236.87526400317438,
+        "cpuMs": 236.67150000000038
+      }
+    },
+    {
+      "mode": "python-jsondoc-rowid",
+      "repeat": 2,
+      "fullState": {
+        "plainBytes": 68685824,
+        "gzip1Bytes": 8397560,
+        "wallMs": 226.96237098716665,
+        "cpuMs": 228.1211999999999
+      },
+      "priceRestore": {
+        "plainBytes": 68685824,
+        "gzip1Bytes": 8397560,
+        "wallMs": 221.1003270058427,
+        "cpuMs": 222.0898
+      }
+    },
+    {
+      "mode": "python-jsonb-rowid",
+      "repeat": 2,
+      "fullState": {
+        "plainBytes": 68620288,
+        "gzip1Bytes": 8633206,
+        "wallMs": 232.4117599928286,
+        "cpuMs": 233.17379999999943
+      },
+      "priceRestore": {
+        "plainBytes": 68620288,
+        "gzip1Bytes": 8633206,
+        "wallMs": 234.246157007874,
+        "cpuMs": 235.02890000000053
+      }
+    }
+  ],
+  "semanticEquality": true
+}

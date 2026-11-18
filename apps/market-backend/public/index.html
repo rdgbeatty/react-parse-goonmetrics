@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="EVE market backend lab and static arbitrage viewer."><title>Market backend lab</title><link rel="stylesheet" href="./styles.css"></head>
+<body>
+<header class="topbar"><div class="brand"><span class="brand-mark" aria-hidden="true">◈</span><strong>GOONMETRICS</strong><span>/ market lab</span></div><nav aria-label="Main navigation"><a href="#browse" id="browse-link">Browse data</a><a href="#setup" id="setup-link">Setup & diagnostics</a><a href="../#/imports" id="legacy-link" hidden>Original site</a></nav><span class="phase">BACKEND SCAFFOLD</span></header>
+<main>
+<section id="browse-page" aria-labelledby="opportunities-title">
+  <div class="browse-heading"><h1>Trade opportunities <span id="result-count" class="count">0</span></h1><div class="heading-actions"><span id="mode-label" class="caption"></span><button id="reload" class="button secondary">Reload snapshot</button></div></div>
+  <details id="route-panel" class="workspace compact-panel"><summary>Route & assumptions <span id="route-label">Jita → C-J6MT</span><span id="strategy-label" class="caption">Buy from sell orders → list sell orders</span></summary>
+    <div class="controls">
+      <label>Buy from<select id="source"><option value="jita">Jita</option><option value="cj6mt">C-J6MT</option></select></label>
+      <button id="swap" class="swap" aria-label="Swap source and destination">⇄</button>
+      <label>Sell at<select id="destination"><option value="cj6mt">C-J6MT</option><option value="jita">Jita</option></select></label>
+      <label>Trade strategy<select id="sale"><option value="listing">Buy from sell orders → list sell orders</option><option value="instant">Buy from sell orders → sell to buy orders</option></select></label>
+      <label>Haul · ISK / m³<input id="haul" type="number" min="0" max="1000000" step="50" value="700"></label>
+      <label>Sale expenses · %<input id="tax" type="number" min="0" max="100" step="0.01" value="5.37"></label>
+      <label>Demand window<select id="window"><option value="7">7 days (default)</option><option value="14">14 days, divided by 2</option></select></label>
+    </div><p class="assumption-note">Weekly profit uses destination regional traded volume as a rough flow reference. Fourteen-day mode divides that total by two to keep the displayed figures weekly. Best-price estimates use the current bid or ask.</p>
+  </details>
+  <details id="age-panel" class="workspace compact-panel"><summary>Market data age <span id="age-summary" class="caption">Loading…</span></summary><div class="age-body"><div id="freshness" class="freshness-grid"></div><p class="caption">Times use each hub’s oldest order page. This panel opens when quote data reaches eight hours old.</p></div></details>
+  <div id="browse-notice" class="caption" role="status"></div>
+  <section class="workspace opportunities" aria-labelledby="opportunities-title">
+    <div class="table-toolbar"><div><h2 id="opportunities-title">Import / export table</h2><p id="coverage" class="caption">Loading snapshot…</p></div><label class="search"><span class="sr-only">Search items or type IDs</span><input id="search" type="search" placeholder="Search item or type ID…"></label></div>
+    <div class="table-scroll" tabindex="0" role="region" aria-label="Trade opportunity table, scroll for more columns"><table><thead><tr>
+      <th><button data-sort="typeId">ID</button></th><th><button data-sort="itemName">Item</button></th>
+      <th title="Destination regional traded volume, normalized to one week"><button data-sort="regionalWeekVolume">Wk volume · region</button></th>
+      <th><button data-sort="acquisition" id="source-column">Jita ask</button></th><th title="Purchase price plus hauling per unit"><button data-sort="landed">Import cost</button></th>
+      <th><button data-sort="destinationPrice" id="destination-column">C-J6MT ask</button></th><th><button data-sort="margin">Margin %</button></th>
+      <th title="(Destination price minus purchase price) × weekly regional volume, before hauling and sale expenses"><button data-sort="grossWeekProfit">Gross wk profit</button></th>
+      <th title="After hauling and sale expenses × weekly regional volume"><button data-sort="estimatedWeekProfit">Net wk profit ↓</button></th>
+      <th title="Original app filler score: 80% weekly hauling-volume rank, 10% profit rank, 10% acquisition-price density tier"><button data-sort="fillerScore">Fill</button></th>
+      <th title="Acquisition ISK per packaged cubic metre"><button data-sort="pricePerM3">Price / m³</button></th>
+      <th><button data-sort="profit">Net / unit</button></th><th><button data-sort="destinationUnits">Book units</button></th>
+      <th title="Destination ask orders with an issued timestamp in the last 24h. Does not identify unique sellers or prove repricing."><button data-sort="recentAskOrders">Recent asks · 24h</button></th>
+      <th title="Remaining units on those recently issued asks"><button data-sort="recentAskUnits">Recent ask units</button></th>
+    </tr></thead><tbody id="rows"></tbody></table></div>
+    <p id="empty" class="empty" hidden>No matching items. Try another search or route.</p>
+    <div class="pagination"><span id="page-info">—</span><div><button id="previous" class="button secondary" disabled>Previous</button><button id="next" class="button secondary" disabled>Next</button></div></div>
+    <p class="table-footnote">“—” means unavailable. Regional volume is a demand reference, not verified hub sales. Gross weekly profit replaces the old Goonmetrics-only column with a local estimate. Stockouts have no assumed sale price. Competition counts recently issued orders, not unique sellers.</p>
+  </section>
+</section>
+<section id="setup-page" hidden aria-labelledby="setup-title"><div class="heading"><h1 id="setup-title">Setup & diagnostics</h1><a class="button secondary" href="./data/market.json" download="market.json">Download public JSON</a></div>
+<div id="message" class="notice" role="status" aria-live="polite">Loading the local market snapshot…</div>
+<section id="hosted-panel" class="workspace diagnostics" hidden><h2>GitHub collector</h2><p>Market refreshes run in GitHub Actions. The published snapshot remains available while collection is paused or a run fails.</p><a class="button secondary" href="./connect.html">Owner setup & collection</a><p class="caption">Visitors need no EVE or GitHub authorization.</p></section>
+<div class="stats"><div><span>DATASET</span><strong id="dataset">—</strong></div><div><span>SNAPSHOT</span><strong id="size">—</strong></div><div><span>FILE BUILT</span><strong id="updated">—</strong></div></div>
+    <details id="local-panel" class="workspace local-panel" open hidden>
+      <summary><span>Local setup & collection</span><span id="connection-summary" class="caption">Configure EVE when you are ready</span></summary>
+      <div class="local-body">
+        <div class="setup-intro"><div><h2>Connect your collector character</h2><p>Register this exact callback in your EVE application: <code id="callback">http://localhost:4173/auth/eve/callback</code></p><p>Required scopes: <code>esi-markets.structure_markets.v1</code> and <code>esi-universe.read_structures.v1</code>.</p><a href="https://developers.eveonline.com/applications" target="_blank" rel="noreferrer">Open EVE applications ↗</a></div><div class="connection-card"><span>CHARACTER</span><strong id="character">Not connected</strong><button id="connect" class="button">Connect EVE</button><button id="disconnect" class="text-button" hidden>Disconnect locally</button></div></div>
+        <p class="caption">Local login uses PKCE: enter the application client ID and register the callback above. The application secret is optional and is not sent during local login.</p>
+        <form id="settings" autocomplete="off"><div class="settings-grid">
+          <label>Application client ID<input name="clientId" autocomplete="off" spellcheck="false"></label>
+          <label>Application Secret Key · optional legacy setting<input name="clientSecret" type="password" autocomplete="off" placeholder="Not required for local PKCE login"></label>
+          <label>Legacy Tortuga structure ID · inactive by default<input name="tortugaId" inputmode="numeric" placeholder="Unused while Tortuga is disabled"></label>
+          <label class="checkbox-label"><input name="tortugaEnabled" type="checkbox">Enable legacy Tortuga / Siseide (retired)</label>
+          <label>C-J6MT structure ID<input name="cjId" inputmode="numeric"></label>
+          <label>ESI contact · email or project URL<input name="contact" placeholder="you@example.com"></label>
+          <label>Live tracked types · 0 = all; 1–200 = sample<input name="typeLimit" type="number" min="0" max="200" value="0" required></label>
+          <label>History batch · seconds<input name="historyBatchSeconds" type="number" min="1" max="1800" value="300" required></label>
+        </div><p class="caption">Settings and the character grant stay in ignored local files. Leave the secret blank to keep the saved value. Save before connecting or collecting.</p><p id="scope-note" class="caption">All order pages are retrieved. Set live tracked types to 0 for every item quoted across the enabled hubs. Names and volumes come from the local SDE. History uses batches of up to 1,000 region/item requests, with a five-minute safety limit per batch. The local server continues automatically through the pass; Pause stops after the current batch.</p><button class="button secondary" type="submit">Save local settings</button></form>
+        <div class="collector-actions"><div><h3>Run a collection</h3><p class="caption">Saves quotes first, then refreshes expired history. Continues automatically through 1,000-pair batches; fresh and deferred pairs are skipped. Run on consecutive days to measure daily upserts.</p></div><button id="collect" class="button">Collect live markets</button><button id="quotes" class="button secondary">Refresh prices only</button><button id="history" class="button secondary">Update / verify history</button><button id="pause-history" class="button secondary" hidden>Pause after this batch</button><button id="verify" class="button secondary">Verify stored history</button><button id="fixture" class="button secondary">Generate 60,000 simulated rows</button></div>
+        <div id="collection-progress" class="collection-progress" hidden>
+          <p id="session-progress" class="caption"></p><p id="progress-stage" class="progress-stage" role="status" aria-live="polite">Starting collection…</p>
+          <div class="progress-heading"><label id="hub-progress-label" for="hub-progress">Order books · waiting for enabled hubs</label><span id="hub-progress-detail"></span></div>
+          <progress id="hub-progress" max="2" value="0" aria-labelledby="hub-progress-label"></progress>
+          <div class="progress-heading"><label id="work-progress-label" for="work-progress">Waiting for the first page</label><span id="work-progress-detail"></span></div>
+          <progress id="work-progress" max="1" aria-labelledby="work-progress-label"></progress>
+        </div>
+        <p id="local-message" class="local-message" role="status" aria-live="polite">No live collection has been run.</p>
+      </div>
+    </details>
+<section class="workspace diagnostics"><div class="table-toolbar"><div><h2>Collection reports</h2><p id="metrics-description" class="caption">Run wall time, process CPU, peak resident memory and history upserts. Reports persist locally across restarts; CPU/RSS include other work in this server process.</p></div><a id="metrics-download" class="button secondary" href="./local/metrics" download="collection-reports.json">Download reports</a></div><p id="metrics-empty" class="caption">No saved runs yet. Collection is available while the local backend is running.</p><div class="table-scroll"><table><thead><tr><th>Started / job</th><th>Result</th><th>Wall / CPU</th><th>Peak RSS</th><th>HTTP / cache</th><th>History refreshed / eligible / deferred</th><th>Days + / corrected / same / pruned</th></tr></thead><tbody id="metrics-rows"></tbody></table></div><pre id="metrics-detail" hidden></pre></section>
+<section class="workspace diagnostics"><h2>History coverage</h2><p class="caption">Tracked independently: last check, source update, coverage through date, and last actual daily record. Missing daily records remain unknown. No history age warnings are applied here.</p><div id="history-coverage"></div></section>
+<section id="deferred-panel" class="workspace diagnostics"><div class="table-toolbar"><div><h2>Deferred history items <span id="deferred-count" class="count">0</span></h2><p class="caption">HTTP 404 defers a region/item pair for 24 hours. Quotes stay visible. The first recorded failure time survives repeated failures, so the age can grow across days.</p></div><a class="button secondary" href="./local/history-state" download="history-state.json">Download history state</a></div>
+<p id="history-state-summary" class="caption">History diagnostics are available from the local backend.</p><p id="deferred-empty" class="caption">No deferred items.</p><div class="table-scroll"><table><thead><tr><th>Item / type ID</th><th>Region</th><th>Reason</th><th>First recorded failure</th><th>Deferred for</th><th>Last attempt</th><th>Next retry</th><th>Retry in</th><th>Failures</th></tr></thead><tbody id="deferred-rows"></tbody></table></div></section>
+</section><footer>Market backend lab <span>Local collection → public JSON → browser calculations.</span></footer></main><script type="module" src="./app.mjs"></script></body></html>

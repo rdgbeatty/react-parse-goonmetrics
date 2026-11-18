@@ -1,0 +1,474 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-11-08T00:37:28.363210+00:00",
+  "environment": {
+    "platform": "Linux-5.15.167.4-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+    "cpu": "Intel(R) Core(TM) i9-14900KF",
+    "logicalCpus": 32,
+    "python": "3.12.3",
+    "sqlite": "3.45.1",
+    "node": "v18.19.1",
+    "temporaryRoot": "/tmp"
+  },
+  "method": {
+    "repeats": 1,
+    "processes": "fresh process for each job; randomized mode order per repetition",
+    "cpu": "wait4 user+system, including waited-for native child; peak RSS is max process RSS, not simultaneous tree sum",
+    "input": "local replay of ESI-shaped JSON plus installed SDE; network/download and fixture generation excluded",
+    "history": "21 retained completed days; next-day full overlapping response with last-three-day corrections; stable missing-day gaps",
+    "packaging": "gzip level 1 proxy measured separately; not an Actions zstd/network measurement",
+    "native": "Node JSON parse/normalization/binary conversion + C read/aggregate/public JSON; all charged; compiler measured separately"
+  },
+  "fixture": {
+    "typeCount": 2000,
+    "syntheticTypes": 0,
+    "sourceDays": 365,
+    "retainedDays": 21,
+    "now": "2026-11-07T17:06:32.671Z",
+    "asOfDay": 20763,
+    "definitions": [
+      {
+        "id": "jita",
+        "locationId": "60003760",
+        "regionId": "10000002"
+      },
+      {
+        "id": "tortuga",
+        "locationId": "1056332656965",
+        "regionId": "10000030"
+      },
+      {
+        "id": "cj6mt",
+        "locationId": "1049588174021",
+        "regionId": "10000009"
+      }
+    ],
+    "catalogSource": "installed CCP SDE",
+    "capturedOrders": 52665,
+    "syntheticOrders": 5478,
+    "orderCount": 58143,
+    "historySeries": 6000,
+    "retainedHistoryRows": 125937,
+    "inputBytes": {
+      "history-update.json": 222238847,
+      "fixture.json": 10105,
+      "history-input.json": 222238217,
+      "orders-input.json": 13419041,
+      "catalog-input.json": 7609392
+    }
+  },
+  "nativeCompiler": {
+    "wallMs": 171.69009499775711,
+    "cpuMs": 102.798,
+    "maxRssKiB": 32788
+  },
+  "medians": [
+    {
+      "mode": "node-json",
+      "scenario": "bootstrap",
+      "wallMs": 2062.0206610037712,
+      "cpuMs": 2529.39,
+      "maxRssKiB": 614476,
+      "stateBytes": 5706014,
+      "publicBytes": 439668,
+      "cpuMinMs": 2529.39,
+      "cpuMaxMs": 2529.39
+    },
+    {
+      "mode": "node-json",
+      "scenario": "prices",
+      "wallMs": 298.1072879920248,
+      "cpuMs": 303.42699999999996,
+      "maxRssKiB": 87472,
+      "stateBytes": 5706014,
+      "publicBytes": 439668,
+      "cpuMinMs": 303.42699999999996,
+      "cpuMaxMs": 303.42699999999996
+    },
+    {
+      "mode": "node-json",
+      "scenario": "history",
+      "wallMs": 1772.995325998636,
+      "cpuMs": 2188.245,
+      "maxRssKiB": 612476,
+      "stateBytes": 5706822,
+      "publicBytes": 439846,
+      "cpuMinMs": 2188.245,
+      "cpuMaxMs": 2188.245
+    },
+    {
+      "mode": "node-c-binary",
+      "scenario": "bootstrap",
+      "wallMs": 1662.2066730051301,
+      "cpuMs": 2029.07,
+      "maxRssKiB": 611836,
+      "stateBytes": 8865676,
+      "publicBytes": 493894,
+      "cpuMinMs": 2029.07,
+      "cpuMaxMs": 2029.07
+    },
+    {
+      "mode": "node-c-binary",
+      "scenario": "prices",
+      "wallMs": 262.2910409991164,
+      "cpuMs": 264.198,
+      "maxRssKiB": 85264,
+      "stateBytes": 8865676,
+      "publicBytes": 493894,
+      "cpuMinMs": 264.198,
+      "cpuMaxMs": 264.198
+    },
+    {
+      "mode": "node-c-binary",
+      "scenario": "history",
+      "wallMs": 1682.6393470109906,
+      "cpuMs": 2075.177,
+      "maxRssKiB": 612576,
+      "stateBytes": 8865676,
+      "publicBytes": 494072,
+      "cpuMinMs": 2075.177,
+      "cpuMaxMs": 2075.177
+    },
+    {
+      "mode": "python-json",
+      "scenario": "bootstrap",
+      "wallMs": 2998.226544004865,
+      "cpuMs": 2861.6529999999993,
+      "maxRssKiB": 1193468,
+      "stateBytes": 5706014,
+      "publicBytes": 439668,
+      "cpuMinMs": 2861.6529999999993,
+      "cpuMaxMs": 2861.6529999999993
+    },
+    {
+      "mode": "python-json",
+      "scenario": "prices",
+      "wallMs": 244.94194900034927,
+      "cpuMs": 189.06400000000002,
+      "maxRssKiB": 72336,
+      "stateBytes": 5706014,
+      "publicBytes": 439668,
+      "cpuMinMs": 189.06400000000002,
+      "cpuMaxMs": 189.06400000000002
+    },
+    {
+      "mode": "python-json",
+      "scenario": "history",
+      "wallMs": 2894.077598990407,
+      "cpuMs": 2825.123,
+      "maxRssKiB": 1182464,
+      "stateBytes": 5706822,
+      "publicBytes": 439846,
+      "cpuMinMs": 2825.123,
+      "cpuMaxMs": 2825.123
+    },
+    {
+      "mode": "python-sqlite",
+      "scenario": "bootstrap",
+      "wallMs": 3356.435365989455,
+      "cpuMs": 3160.66,
+      "maxRssKiB": 1192468,
+      "stateBytes": 5935104,
+      "publicBytes": 439668,
+      "cpuMinMs": 3160.66,
+      "cpuMaxMs": 3160.66
+    },
+    {
+      "mode": "python-sqlite",
+      "scenario": "prices",
+      "wallMs": 261.6809600003762,
+      "cpuMs": 197.965,
+      "maxRssKiB": 73012,
+      "stateBytes": 5935104,
+      "publicBytes": 441856,
+      "cpuMinMs": 197.965,
+      "cpuMaxMs": 197.965
+    },
+    {
+      "mode": "python-sqlite",
+      "scenario": "history",
+      "wallMs": 3049.8952390043996,
+      "cpuMs": 2911.2200000000003,
+      "maxRssKiB": 1183152,
+      "stateBytes": 5935104,
+      "publicBytes": 452230,
+      "cpuMinMs": 2911.2200000000003,
+      "cpuMaxMs": 2911.2200000000003
+    }
+  ],
+  "runs": [
+    {
+      "repeat": 0,
+      "mode": "python-sqlite",
+      "scenario": "bootstrap",
+      "internalWallMs": 3181.1720139958197,
+      "phases": {
+        "source": 2916.0629370016977,
+        "store": 172.3408300022129,
+        "process": 21.127170999534428,
+        "publish": 13.053618007688783
+      },
+      "stateBytes": 5935104,
+      "publicBytes": 439668,
+      "wallMs": 3356.435365989455,
+      "cpuMs": 3160.66,
+      "maxRssKiB": 1192468
+    },
+    {
+      "repeat": 0,
+      "mode": "python-sqlite",
+      "scenario": "prices",
+      "internalWallMs": 172.97482799040154,
+      "phases": {
+        "restore": 3.4861749882111326,
+        "source": 135.1242279924918,
+        "store": 20.195395991322584,
+        "publish": 13.48972599953413
+      },
+      "stateBytes": 5935104,
+      "publicBytes": 441856,
+      "wallMs": 261.6809600003762,
+      "cpuMs": 197.965,
+      "maxRssKiB": 73012
+    },
+    {
+      "repeat": 0,
+      "mode": "python-sqlite",
+      "scenario": "history",
+      "internalWallMs": 2878.5106430004817,
+      "phases": {
+        "restore": 6.2208510062191635,
+        "source": 2662.0678870094707,
+        "store": 177.4216189951403,
+        "process": 21.261760004563257,
+        "publish": 10.785397986182943
+      },
+      "stateBytes": 5935104,
+      "publicBytes": 452230,
+      "wallMs": 3049.8952390043996,
+      "cpuMs": 2911.2200000000003,
+      "maxRssKiB": 1183152
+    },
+    {
+      "repeat": 0,
+      "mode": "python-json",
+      "scenario": "bootstrap",
+      "internalWallMs": 2808.017878996907,
+      "phases": {
+        "source": 2579.4038950116374,
+        "store": 178.89291899336968,
+        "process": 36.63739300100133,
+        "publish": 12.839128990890458
+      },
+      "stateBytes": 5706014,
+      "publicBytes": 439668,
+      "wallMs": 2998.226544004865,
+      "cpuMs": 2861.6529999999993,
+      "maxRssKiB": 1193468
+    },
+    {
+      "repeat": 0,
+      "mode": "python-json",
+      "scenario": "prices",
+      "internalWallMs": 156.8597849982325,
+      "phases": {
+        "restore": 2.058954007225111,
+        "source": 131.64068599871825,
+        "store": 10.353559991926886,
+        "publish": 12.708020003628917
+      },
+      "stateBytes": 5706014,
+      "publicBytes": 439668,
+      "wallMs": 244.94194900034927,
+      "cpuMs": 189.06400000000002,
+      "maxRssKiB": 72336
+    },
+    {
+      "repeat": 0,
+      "mode": "python-json",
+      "scenario": "history",
+      "internalWallMs": 2719.8087209981168,
+      "phases": {
+        "restore": 4.053163022035733,
+        "source": 2546.888726996258,
+        "store": 115.79131298640277,
+        "process": 36.90337899024598,
+        "publish": 16.017659989302047
+      },
+      "stateBytes": 5706822,
+      "publicBytes": 439846,
+      "wallMs": 2894.077598990407,
+      "cpuMs": 2825.123,
+      "maxRssKiB": 1182464
+    },
+    {
+      "repeat": 0,
+      "mode": "node-c-binary",
+      "scenario": "bootstrap",
+      "internalWallMs": 1533.3332519978285,
+      "phases": {
+        "source": 1432.9004999995232,
+        "store": 64.19134299457073,
+        "native_process_publish": 35.96449899673462
+      },
+      "stateBytes": 8865676,
+      "publicBytes": 493894,
+      "wallMs": 1662.2066730051301,
+      "cpuMs": 2029.07,
+      "maxRssKiB": 611836
+    },
+    {
+      "repeat": 0,
+      "mode": "node-c-binary",
+      "scenario": "prices",
+      "internalWallMs": 146.9945220053196,
+      "phases": {
+        "restore": 1.6871020048856735,
+        "source": 109.3009350001812,
+        "store": 15.010154008865356,
+        "native_process_publish": 20.597080007195473
+      },
+      "stateBytes": 8865676,
+      "publicBytes": 493894,
+      "wallMs": 262.2910409991164,
+      "cpuMs": 264.198,
+      "maxRssKiB": 85264
+    },
+    {
+      "repeat": 0,
+      "mode": "node-c-binary",
+      "scenario": "history",
+      "internalWallMs": 1539.335836008191,
+      "phases": {
+        "restore": 2.003601998090744,
+        "source": 1477.279289007187,
+        "store": 29.216003999114037,
+        "native_process_publish": 30.439328998327255
+      },
+      "stateBytes": 8865676,
+      "publicBytes": 494072,
+      "wallMs": 1682.6393470109906,
+      "cpuMs": 2075.177,
+      "maxRssKiB": 612576
+    },
+    {
+      "repeat": 0,
+      "mode": "node-json",
+      "scenario": "bootstrap",
+      "internalWallMs": 1907.1198569983244,
+      "phases": {
+        "source": 1799.9728019833565,
+        "store": 84.31416799128056,
+        "process": 13.133423000574112,
+        "publish": 9.328782990574837
+      },
+      "stateBytes": 5706014,
+      "publicBytes": 439668,
+      "wallMs": 2062.0206610037712,
+      "cpuMs": 2529.39,
+      "maxRssKiB": 614476
+    },
+    {
+      "repeat": 0,
+      "mode": "node-json",
+      "scenario": "prices",
+      "internalWallMs": 159.5979000031948,
+      "phases": {
+        "restore": 1.3802499920129776,
+        "source": 137.73144400119781,
+        "store": 8.559375002980232,
+        "publish": 11.45541000366211
+      },
+      "stateBytes": 5706014,
+      "publicBytes": 439668,
+      "wallMs": 298.1072879920248,
+      "cpuMs": 303.42699999999996,
+      "maxRssKiB": 87472
+    },
+    {
+      "repeat": 0,
+      "mode": "node-json",
+      "scenario": "history",
+      "internalWallMs": 1618.7399349957705,
+      "phases": {
+        "restore": 2.203104004263878,
+        "source": 1533.5239669978619,
+        "store": 61.17866599559784,
+        "process": 13.352895006537437,
+        "publish": 7.985151007771492
+      },
+      "stateBytes": 5706822,
+      "publicBytes": 439846,
+      "wallMs": 1772.995325998636,
+      "cpuMs": 2188.245,
+      "maxRssKiB": 612476
+    }
+  ],
+  "artifacts": [
+    {
+      "mode": "python-sqlite",
+      "repeat": 0,
+      "fullState": {
+        "plainBytes": 5935104,
+        "gzip1Bytes": 918860,
+        "wallMs": 31.465901993215084,
+        "cpuMs": 31.240500000000004
+      },
+      "priceRestore": {
+        "plainBytes": 5935104,
+        "gzip1Bytes": 918860,
+        "wallMs": 27.429748995928094,
+        "cpuMs": 27.228799999999996
+      }
+    },
+    {
+      "mode": "python-json",
+      "repeat": 0,
+      "fullState": {
+        "plainBytes": 5706822,
+        "gzip1Bytes": 642104,
+        "wallMs": 18.97537500190083,
+        "cpuMs": 18.968999999999987
+      },
+      "priceRestore": {
+        "plainBytes": 185995,
+        "gzip1Bytes": 46722,
+        "wallMs": 1.0030069970525801,
+        "cpuMs": 1.0026999999999953
+      }
+    },
+    {
+      "mode": "node-c-binary",
+      "repeat": 0,
+      "fullState": {
+        "plainBytes": 8865676,
+        "gzip1Bytes": 682356,
+        "wallMs": 26.532157004112378,
+        "cpuMs": 26.57709999999999
+      },
+      "priceRestore": {
+        "plainBytes": 277692,
+        "gzip1Bytes": 53831,
+        "wallMs": 1.2540600000647828,
+        "cpuMs": 1.2574999999999947
+      }
+    },
+    {
+      "mode": "node-json",
+      "repeat": 0,
+      "fullState": {
+        "plainBytes": 5706822,
+        "gzip1Bytes": 642104,
+        "wallMs": 21.172663997276686,
+        "cpuMs": 21.235300000000013
+      },
+      "priceRestore": {
+        "plainBytes": 185995,
+        "gzip1Bytes": 46722,
+        "wallMs": 1.033016000292264,
+        "cpuMs": 1.0370000000000101
+      }
+    }
+  ],
+  "semanticEquality": true
+}

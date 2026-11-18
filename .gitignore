@@ -5,3 +5,15 @@ dist/
 .DS_Store
 /.pnpm-store
 /.env
+/.market-poc/
+/.market-backend/
+**/.env
+**/.env.local
+**/.dev.vars
+
+# Local editor recovery files
+*.swp
+*.swo
+
+# Atomic combined-build rollback
+/dist.previous/

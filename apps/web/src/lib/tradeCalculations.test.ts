@@ -32,14 +32,14 @@ function createSampleRow(overrides: Partial<ScrapedRow> = {}): ScrapedRow {
 Deno.test("computeTradeRows uses Jita as acquisition market for imports", () => {
   const row = computeTradeRows([createSampleRow()], 0, TradeRoute.IMPORTS)[0];
 
-  assertEqual(row.transportCost, 2400, "transportCost should use itemVolumeM3 * 1200");
+  assertEqual(row.transportCost, 1400, "transportCost should use itemVolumeM3 * 700");
   assertEqual(row.acquisitionPrice, 1000, "imports should acquire in Jita");
-  assertEqual(row.landedCost, 3400, "imports should add transport to Jita acquisition");
+  assertEqual(row.landedCost, 2400, "imports should add transport to Jita acquisition");
   assertEqual(row.destinationPrice, 4000, "imports should sell in C-J6MT");
-  assertClose(row.weekProfit, 3852, 0.0001, "imports should compute expected weekly profit");
+  assertClose(row.weekProfit, 13852, 0.0001, "imports should compute expected weekly profit");
   assertClose(
     row.afterExpenseMarginPercent,
-    11.32941176470589,
+    57.71666666666667,
     0.0001,
     "imports should compute expected after-expense margin",
   );
@@ -49,14 +49,14 @@ Deno.test("computeTradeRows uses Jita as acquisition market for imports", () => 
 Deno.test("computeTradeRows uses C-J6MT as acquisition market for exports", () => {
   const row = computeTradeRows([createSampleRow()], 0, TradeRoute.EXPORTS)[0];
 
-  assertEqual(row.transportCost, 2400, "transportCost should stay route-independent");
+  assertEqual(row.transportCost, 1400, "transportCost should stay route-independent");
   assertEqual(row.acquisitionPrice, 4000, "exports should acquire in C-J6MT");
-  assertEqual(row.landedCost, 6400, "exports should add transport to C-J6MT acquisition");
+  assertEqual(row.landedCost, 5400, "exports should add transport to C-J6MT acquisition");
   assertEqual(row.destinationPrice, 1000, "exports should sell in Jita");
-  assertClose(row.weekProfit, -54537, 0.0001, "exports should compute expected weekly profit");
+  assertClose(row.weekProfit, -44537, 0.0001, "exports should compute expected weekly profit");
   assertClose(
     row.afterExpenseMarginPercent,
-    -85.2140625,
+    -82.47592592592592,
     0.0001,
     "exports should compute expected after-expense margin",
   );

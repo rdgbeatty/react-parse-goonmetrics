@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'unsafe-inline'; connect-src https://login.eveonline.com https://api.github.com; base-uri 'none'; form-action 'none'">
+<title>GitHub-only sign-in feasibility</title>
+<style>
+:root{color-scheme:dark;font:17px/1.5 system-ui;background:#101821;color:#edf1f7}body{max-width:850px;margin:48px auto;padding:0 22px}h1{font-size:1.8rem;line-height:1.2}section{border:1px solid #45546b;border-radius:10px;padding:20px;margin:24px 0}label{display:block}input{box-sizing:border-box;width:100%;font:inherit;padding:8px;margin:8px 0 16px;background:#182535;color:inherit;border:1px solid #778ba5;border-radius:5px}button{font:inherit;padding:8px 15px;border:0;border-radius:6px;background:#92c6fc;color:#0c1825;margin:4px 8px 4px 0;cursor:pointer}button:disabled{opacity:.5}table{border-collapse:collapse;width:100%;font-size:.9rem}td,th{text-align:left;padding:10px 5px;border-bottom:1px solid #45546b}pre{white-space:pre-wrap;overflow-wrap:anywhere}.muted{color:#b8c8db}a{color:#92c6fc}
+</style>
+<h1>Can this run entirely on GitHub?</h1>
+<p>This isolated spike tests browser access to EVE and GitHub. Its local server only serves static files. It has no OAuth exchange or credential-storage endpoint.</p>
+<section aria-labelledby="network-title">
+<h2 id="network-title">1. Browser/API checks</h2>
+<p class="muted">These checks send deliberately invalid credentials. A readable rejection shows the browser can reach an endpoint; it does not prove successful sign-in or GitHub write permission.</p>
+<button id="probe">Run browser checks</button>
+<p id="probe-status" role="status"></p>
+<table><thead><tr><th>Endpoint</th><th>Readable?</th><th>HTTP</th><th>Time</th></tr></thead><tbody id="results"></tbody></table>
+</section>
+<section aria-labelledby="login-title">
+<h2 id="login-title">2. Optional real EVE sign-in</h2>
+<label for="client-id">EVE application client ID (public identifier)</label>
+<input id="client-id" autocomplete="off" spellcheck="false" maxlength="128">
+<p>Use the same application as local setup. Its registered callback must be exactly <code id="callback"></code>. Stop the normal backend before using its port for this test.</p>
+<button id="connect">Connect EVE in browser</button><button id="forget" disabled>Forget test grant</button>
+<pre id="login-status" role="status">No grant held. No application secret is needed.</pre>
+<p class="muted">The temporary PKCE transaction survives the redirect in this tab’s session storage. A successful grant stays in JavaScript memory only, is never displayed, and disappears on reload. This spike does not save it to GitHub or replace the working local grant.</p>
+</section>
+<p class="muted">The next implementation step is encrypted repository Secret storage with separate owner GitHub authorization. That step needs a reviewed sealed-box library and is intentionally absent from this feasibility page.</p>
+<script type="module" src="/page.mjs"></script>
+</html>
