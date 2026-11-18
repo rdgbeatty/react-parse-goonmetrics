@@ -1,3 +1,7 @@
+# Market backend and website TODOs
+
+Both sites are now published. Manual collection credentials and first authenticated hosted ingestion remain to be verified; schedules stay off. See [the live release record](docs/discovery/13-first-publication.md).
+
 ## Combined release and GitHub implementation — 2026-11-18
 
 - [x] Keep legacy root/hash URLs and live Deno API; add navigation to the independent modern `/market/` viewer and back.
@@ -8,15 +12,12 @@
 - [x] Verify legacy library behavior, both live scrape sources/routes, modern routing/search/styles and synthetic browser authentication/encryption.
 - [x] Measure real local state pack/restore; document architecture decisions and recovery.
 - [x] Add a first-release seed command with non-network dry-run and refusal to overwrite existing hosted state.
-- [ ] Owner local visual acceptance, then authorized commit/push/publication.
+- [x] Owner accepted the local release; source is pushed and both sites are published with the reviewed data seed. [Live verification](docs/discovery/13-first-publication.md).
 - [ ] Register production EVE callback, configure collector environment/writer and verify a real hosted adoption/rotation/collection/deployment.
 - [ ] Measure actual GitHub runner performance, validate queued-run rotation and exercise hosted recovery/rollback.
 - [ ] Review/update existing Vite/esbuild, React Router and Zod audit findings; preserve legacy fallback behavior.
 - [ ] Retire Deno and the old frontend after confidence in the live replacement; retain scraper concepts as an explicit alternative source.
 
-# Market backend and website TODOs
-
-This is the project checklist. Keep it current as work lands. Local execution remains the approval boundary: no GitHub workflow, publication or deployment has been added during the scaffold work.
 
 ## Working and verified
 
@@ -61,7 +62,7 @@ This is the project checklist. Keep it current as work lands. Local execution re
 - [x] Select and implement bounded versioned Release assets with credentials excluded; actual hosted restore remains to be proven.
 - [x] Implement the exact static Pages callback and repository subpath.
 - [ ] Prove one full real hosted sign-in → Secret → collection → publication cycle.
-- [ ] Review and commit the complete local scaffold/doc/shared-contract changes; no commit or push made by the assistant.
+- [x] Commit and push the reviewed scaffold, documentation and shared contracts.
 
 ## Backend data lifecycle
 
@@ -116,8 +117,9 @@ Implemented behavior and decisions: [history lifecycle](docs/discovery/08-histor
 - [x] Add manual bounded history and quote operations using shared entrypoints; schedules remain off.
 - [x] Add shared workflow concurrency, scoped permissions and redacted failure logs.
 - [x] Build both sites as one Pages artifact from an explicit public allowlist, excluding grants, raw caches and backend daily series.
-- [ ] Verify Pages subpath URLs, compression/cache behavior and latest-data publication.
-- [ ] Review a concrete deployment locally before the first authorized push/publication.
+- [x] Verify deployed Pages subpath URLs and seeded data publication.
+- [ ] Measure production compression/cache behavior and first refreshed-data publication.
+- [x] Owner reviewed the combined local deployment before authorizing push/publication.
 
 ## Frontend/UX — iterative phase
 
@@ -139,4 +141,4 @@ Implemented behavior and decisions: [history lifecycle](docs/discovery/08-histor
 - [ ] Run end-to-end collection → history merge → publication → static-browser checks from a clean checkout.
 - [ ] Document first setup, catalog updates, grant reconnection, local start/test, scheduled operation and recovery.
 - [ ] Review the remaining legacy scraper/API deployment workflow and remove or replace it deliberately.
-- [ ] Confirm owner acceptance and authorize the initial GitHub deployment.
+- [x] Owner accepted and authorized the initial GitHub deployment; publication and public browser checks passed.

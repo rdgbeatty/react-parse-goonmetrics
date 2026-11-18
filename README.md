@@ -1,5 +1,7 @@
 # gm-scraper
 
+Published: [Original site](https://rdgbeatty.github.io/react-parse-goonmetrics/) · [EVE market viewer](https://rdgbeatty.github.io/react-parse-goonmetrics/market/) · [Owner setup](https://rdgbeatty.github.io/react-parse-goonmetrics/market/connect.html). [First-publication verification](docs/discovery/13-first-publication.md).
+
 Combined release: after `npm ci`, run **`npm start`** and open the printed localhost URL. The original React site stays at the root; the new EVE market viewer is under `market/`, with navigation between them and separate CSS. Nothing uploads automatically. See the [deployment/setup/recovery guide](docs/deployment.md) and [implementation decisions and validation](docs/discovery/12-combined-release.md).
 
 

@@ -10,6 +10,8 @@ This package records the existing system, upstream capabilities, architecture al
 
 **2026-11-18 implementation:** [Document 12](12-combined-release.md) records the combined old/new release, encrypted hosted setup, manual workflows and local validation. [Deployment guide](../deployment.md).
 
+**2026-11-18 live release:** Both sites are published. [Document 13](13-first-publication.md) records the actual GitHub run, state seed, live checks and remaining credential setup.
+
 ## Read in this order
 
 1. [EVE API, character authorization, and market-data limitations](01-eve-api-and-authentication.md)
@@ -24,6 +26,7 @@ This package records the existing system, upstream capabilities, architecture al
 10. [Jita/C-J6MT closeout, GitHub Actions/credentials and dormancy](10-jita-cj-deployment-and-dormancy.md)
 11. [GitHub-only browser sign-in feasibility, Secrets and workflow design](11-github-only-auth-feasibility.md)
 12. [Combined release, implemented GitHub lifecycle and integration tests](12-combined-release.md)
+13. [First live publication and remaining credential setup](13-first-publication.md)
 
 [Project TODOs](../../TODO.md) track remaining implementation, validation, GitHub and frontend work.
 
