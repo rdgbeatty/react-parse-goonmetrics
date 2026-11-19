@@ -1,6 +1,6 @@
 # Market backend and website TODOs
 
-Both sites are now published. Manual collection credentials and first authenticated hosted ingestion remain to be verified; schedules stay off. See [the live release record](docs/discovery/13-first-publication.md).
+Both sites are published. Hosted EVE adoption and authenticated collection have passed. See [the deployed collection schedule](docs/deployment.md#collection-schedule).
 
 ## Combined release and GitHub implementation — 2026-11-18
 
@@ -13,7 +13,7 @@ Both sites are now published. Manual collection credentials and first authentica
 - [x] Measure real local state pack/restore; document architecture decisions and recovery.
 - [x] Add a first-release seed command with non-network dry-run and refusal to overwrite existing hosted state.
 - [x] Owner accepted the local release; source is pushed and both sites are published with the reviewed data seed. [Live verification](docs/discovery/13-first-publication.md).
-- [ ] Register production EVE callback, configure collector environment/writer and verify a real hosted adoption/rotation/collection/deployment.
+- [x] Register production EVE callback, configure collector environment/writer and verify a real hosted adoption/rotation/collection/deployment.
 - [ ] Measure actual GitHub runner performance, validate queued-run rotation and exercise hosted recovery/rollback.
 - [ ] Review/update existing Vite/esbuild, React Router and Zod audit findings; preserve legacy fallback behavior.
 - [ ] Retire Deno and the old frontend after confidence in the live replacement; retain scraper concepts as an explicit alternative source.
@@ -113,8 +113,9 @@ Implemented behavior and decisions: [history lifecycle](docs/discovery/08-histor
 
 - [x] Implement environment Secret storage, immediate replacement write-back and shared workflow concurrency; real queued-run verification remains.
 - [x] Restore/persist reusable catalog, daily history and summaries through checked Release assets with cold-start recovery; credentials use Secrets.
-- [x] Add manual SDE check/update operation calling the existing updater. Periodic schedules stay disabled while dormant.
-- [x] Add manual bounded history and quote operations using shared entrypoints; schedules remain off.
+- [x] Add manual SDE check/update operation calling the existing updater.
+- [x] Add daily price refresh and weekly 21-day history collection, with manual batch and full-pass options.
+- [ ] Check coverage and duration on the first scheduled weekly history run.
 - [x] Add shared workflow concurrency, scoped permissions and redacted failure logs.
 - [x] Build both sites as one Pages artifact from an explicit public allowlist, excluding grants, raw caches and backend daily series.
 - [x] Verify deployed Pages subpath URLs and seeded data publication.

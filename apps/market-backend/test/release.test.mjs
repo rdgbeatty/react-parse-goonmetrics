@@ -23,6 +23,8 @@ const pending = (overrides = {}) => JSON.stringify({ schemaVersion: 1, nonce, re
 const json = (body, status = 200) => new Response(JSON.stringify(body), { status });
 async function temporary(t) { const p = await mkdtemp(join(tmpdir(), "market-release-test-")); t.after(() => rm(p, { recursive: true, force: true })); return p; }
 const live = () => ({ ...createFixture(2, new Date("2026-11-18T12:00:00Z")), mode: "live" });
+const manualEnv = { GITHUB_ACTIONS: "true", GITHUB_EVENT_NAME: "workflow_dispatch", GITHUB_REPOSITORY: config.repository,
+  GITHUB_REF: "refs/heads/main", GITHUB_ACTOR: "owner", GITHUB_TOKEN: "fake" };
 
 test("Secret writer uses GitHub sealed boxes, and workflow inputs contain only operation/ref/nonce", async () => {
   await sodium.ready;
@@ -139,22 +141,60 @@ test("release downloads never forward bearer credentials to signed CDN URLs", as
   assert.match(calls[0].options.headers.Authorization, /fake-token/); assert.equal(calls[1].options.headers, undefined);
 });
 
-test("hosted guard rejects fork/branch/actor contexts and config rejects secret fields", () => {
-  const env = { GITHUB_ACTIONS: "true", GITHUB_REPOSITORY: config.repository, GITHUB_REF: "refs/heads/main", GITHUB_ACTOR: "owner" };
-  checkHostedContext(config, env);
-  for (const changes of [{ GITHUB_ACTIONS: "false" }, { GITHUB_REPOSITORY: "fork/repo" }, { GITHUB_REF: "refs/heads/untrusted" }, { GITHUB_ACTOR: "visitor" }]) assert.throws(() => checkHostedContext(config, { ...env, ...changes }));
+test("hosted guard allows owner dispatches and approved schedules only on the configured branch", () => {
+  checkHostedContext(config, manualEnv, "adopt");
+  for (const changes of [{ GITHUB_ACTIONS: "false" }, { GITHUB_REPOSITORY: "fork/repo" }, { GITHUB_REF: "refs/heads/untrusted" },
+    { GITHUB_ACTOR: "visitor" }, { GITHUB_EVENT_NAME: "push" }]) {
+    assert.throws(() => checkHostedContext(config, { ...manualEnv, ...changes }, "quotes"));
+  }
+  const scheduled = { ...manualEnv, GITHUB_EVENT_NAME: "schedule", GITHUB_ACTOR: "scheduled-actor" };
+  for (const operation of ["quotes", "weekly-history", "prune"]) checkHostedContext(config, scheduled, operation);
+  assert.throws(() => checkHostedContext(config, scheduled, "adopt"));
+  assert.throws(() => checkHostedContext(config, { ...scheduled, GITHUB_REF: "refs/heads/untrusted" }, "weekly-history"));
   validateReleaseConfig(config); assert.throws(() => validateReleaseConfig({ ...config, clientSecret: "private" }));
 });
 
 test("hosted failed batch still checkpoints progress but does not report success", async (t) => {
   const directory = await temporary(t), calls = [];
-  const env = { GITHUB_ACTIONS: "true", GITHUB_REPOSITORY: config.repository, GITHUB_REF: "refs/heads/main", GITHUB_ACTOR: "owner", GITHUB_TOKEN: "fake" };
-  await assert.rejects(runHosted({ operation: "history", directory, config, env, dependencies: {
+  await assert.rejects(runHosted({ operation: "history", directory, config, env: manualEnv, dependencies: {
     restore: async () => { await writeJson(join(directory,"public/data/market.json"), live()); return {}; },
     run: async () => { calls.push("batch"); throw new Error("source failure"); },
     save: async () => { calls.push("checkpoint"); return { releaseId: 1, bytes: 10 }; },
   } }), /source failure/);
   assert.deepEqual(calls, ["batch", "checkpoint"]);
+});
+
+test("scheduled weekly history crosses batch boundaries and checkpoints the snapshot with 21-day summaries", async (t) => {
+  const directory = await temporary(t);
+  const snapshotPath = join(directory, "public/data/market.json");
+  const snapshot = live();
+  snapshot.hubs = snapshot.hubs.slice(0, 2);
+  snapshot.hubs.forEach((hub, index) => { hub.regionId = String(10000002 + index); });
+  const now = Date.parse("2026-11-18T12:00:00Z"), dayMs = 86_400_000;
+  const days = Array.from({ length: 22 }, (_, index) => ({
+    date: new Date(now - dayMs * (index + 1)).toISOString().slice(0, 10),
+    volume: 10, order_count: 1, average: 10, highest: 10, lowest: 10,
+  }));
+  const result = await runHosted({ operation: "weekly-history", directory, config,
+    env: { ...manualEnv, GITHUB_EVENT_NAME: "schedule", GITHUB_ACTOR: "scheduled-actor" }, dependencies: {
+      restore: async () => { await writeJson(snapshotPath, snapshot); return {}; },
+      historyOptions: { maxPairs: 2, now: () => now, request: async () => ({
+        body: days, expiresAt: now + dayMs, sourceUpdatedAt: new Date(now).toISOString(),
+      }) },
+      save: async () => {
+        const saved = await readJson(snapshotPath);
+        assert.equal(saved.generatedAt, snapshot.generatedAt);
+        for (const row of saved.hubs.flatMap((hub) => hub.rows)) {
+          assert.equal(row.history.retainedDays, 21);
+          assert.equal(row.regionalWeekVolume, 70);
+        }
+        return { releaseId: 1, bytes: 10 };
+      },
+    },
+  });
+  assert.equal(result.status, "complete");
+  assert.equal(result.historySession.batchesCompleted, 2);
+  assert.equal(result.historySession.refreshedPairs, 4);
 });
 
 test("Secret creation accepts GitHub's successful empty 201 response", async () => {
@@ -220,8 +260,7 @@ test("hosted catalog uses the real updater without reacquiring the job's operati
   const directory = await temporary(t), events = [];
   const catalog = { schemaVersion: 1, types: { 34: { name:"Tritanium",groupId:18,marketGroupId:1857,published:true,volumeM3:0.01,packagedVolumeM3:0.01 } } };
   const digest = createHash("sha256").update(JSON.stringify(catalog)).digest("hex"), file = `types-${digest}.json`;
-  const env = { GITHUB_ACTIONS:"true",GITHUB_REPOSITORY:config.repository,GITHUB_REF:"refs/heads/main",GITHUB_ACTOR:"owner",GITHUB_TOKEN:"fake" };
-  const result = await runHosted({ operation:"catalog",directory,config,env,dependencies:{
+  const result = await runHosted({ operation:"catalog",directory,config,env:manualEnv,dependencies:{
     restore:async()=>{ await writeJson(join(directory,"catalog",file),catalog); await writeJson(join(directory,"catalog/current.json"),{schemaVersion:1,buildNumber:12345,sourceReleasedAt:"2026-11-17T00:00:00Z",importedAt:"2026-11-17T01:00:00Z",contentSha256:digest,dataFile:file,typeCount:1}); return {}; },
     catalogOptions:{fetchImpl:async()=>{events.push("version-check");return json({_key:"sde",buildNumber:12345,releaseDate:"2026-11-17T00:00:00Z"});}},
     save:async()=>{events.push("checkpoint");return {releaseId:1,bytes:100};},

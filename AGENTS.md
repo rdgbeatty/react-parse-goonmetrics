@@ -170,5 +170,5 @@ Parsing assumptions:
 - Release dependency manager is npm/package-lock.json; use `npm ci`. No install or remote publication without the owner's applicable authorization.
 - `npm run backend:test` includes hosted credential/state/build tests and needs the installed release dependency. `npm run test:legacy` runs the original pure library tests with Node/esbuild, without installing Deno.
 - `config/market.json` is a validated public allowlist. Credentials belong in ignored local private files or Actions environment Secrets, never config/source/Pages/state archives/workflow inputs.
-- `.github/workflows` are manual-only. Adoption, collection and publication share concurrency. Do not enable schedules or push triggers while dormant.
+- The market collector runs prices daily and history on Mondays in `America/New_York`. Adoption, collection and publication share concurrency. Manual runs require the owner and publication after a source change is manual.
 - `docs/deployment.md` is the setup/recovery runbook; `docs/discovery/12-combined-release.md` records decisions and evidence. A locally successful build is not a proven GitHub deployment.

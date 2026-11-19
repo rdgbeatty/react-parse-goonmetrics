@@ -12,15 +12,24 @@ import { adoptGrant, parseGrant, durableSso, installGrant } from "./lib/hosted-a
 import { EveSso } from "./lib/auth.mjs";
 import { updateCatalogUnlocked } from "./lib/catalog.mjs";
 import { runJob } from "./lib/jobs.mjs";
+import { runHistorySession } from "./lib/history-session.mjs";
 
-export function checkHostedContext(config, env) {
-  if (env.GITHUB_ACTIONS !== "true" || env.GITHUB_REPOSITORY !== config.repository || env.GITHUB_REF !== `refs/heads/${config.branch}` ||
-      env.GITHUB_ACTOR?.toLowerCase() !== config.repository.split("/")[0].toLowerCase()) throw new Error("Hosted mutation requires an owner-triggered Action on the configured repository/default branch.");
+const OPERATIONS = ["adopt", "quotes", "history", "weekly-history", "resume", "catalog", "restore", "prune"];
+const SCHEDULED_OPERATIONS = ["quotes", "weekly-history", "prune"];
+const WEEKLY_HISTORY_BUDGET_MS = 2 * 60 * 60_000;
+
+export function checkHostedContext(config, env, operation) {
+  const authorized = env.GITHUB_EVENT_NAME === "schedule"
+    ? SCHEDULED_OPERATIONS.includes(operation)
+    : env.GITHUB_EVENT_NAME === "workflow_dispatch" && env.GITHUB_ACTOR?.toLowerCase() === config.repository.split("/")[0].toLowerCase();
+  if (env.GITHUB_ACTIONS !== "true" || env.GITHUB_REPOSITORY !== config.repository || env.GITHUB_REF !== `refs/heads/${config.branch}` || !authorized) {
+    throw new Error("Hosted mutation requires an approved schedule or the repository owner on the configured default branch.");
+  }
 }
 export async function runHosted({ operation, directory, config, env = process.env, sso = new EveSso(), writer,
   api = new GitHubApi({ repository: config.repository, token: env.GITHUB_TOKEN }), dependencies = {} }) {
-  checkHostedContext(config, env);
-  if (!["adopt", "quotes", "history", "resume", "catalog", "restore", "prune"].includes(operation)) throw new Error("Invalid hosted operation.");
+  if (!OPERATIONS.includes(operation)) throw new Error("Invalid hosted operation.");
+  checkHostedContext(config, env, operation);
   const restore = dependencies.restore ?? restoreLatest, save = dependencies.save ?? saveStateRelease;
   const run = dependencies.run ?? runJob, catalog = dependencies.catalog ?? updateCatalogUnlocked;
   await mkdir(directory, { recursive: true });
@@ -39,15 +48,27 @@ export async function runHosted({ operation, directory, config, env = process.en
       const grant = parseGrant(env.EVE_GRANT, config.collectorCharacterId);
       await installGrant(directory, grant); authenticated = durableSso(sso, writer, config.collectorCharacterId);
     }
-    if (operation === "history" && (await readJson(join(directory, "public", "data", "market.json")))?.mode !== "live") throw new Error("Collect live quotes before continuing history.");
+    const historyOnly = ["history", "weekly-history"].includes(operation);
+    if (historyOnly && (await readJson(join(directory, "public", "data", "market.json")))?.mode !== "live") throw new Error("Collect live quotes before continuing history.");
     await writeJson(join(directory, "private", "config.json"), config);
     const controller = new AbortController();
     const stop = () => controller.abort(); process.once("SIGINT", stop); process.once("SIGTERM", stop);
     let report, failure;
     try {
-      if (operation !== "history") await catalog(directory, { ...dependencies.catalogOptions, onProgress: (p) => { if (p.phase !== "extracting") console.log(`Catalog: ${p.phase}`); } });
-      if (operation !== "catalog") report = await run(operation === "resume" ? "collect" : operation, directory, config, authenticated,
-        { signal: controller.signal, historyOptions: { maxPairs: 1000, maxSeconds: 300 } });
+      if (!historyOnly) await catalog(directory, { ...dependencies.catalogOptions, onProgress: (p) => { if (p.phase !== "extracting") console.log(`Catalog: ${p.phase}`); } });
+      const options = { signal: controller.signal, historyOptions: { maxPairs: 1000, maxSeconds: 300, ...dependencies.historyOptions } };
+      if (operation === "weekly-history") {
+        const deadline = Date.now() + WEEKLY_HISTORY_BUDGET_MS;
+        report = await runHistorySession("history", directory, config, null, {
+          ...options,
+          shouldPause: () => Date.now() >= deadline,
+          onSession: ({ status, batchesCompleted, refreshedPairs, lastBatch }) => {
+            if (lastBatch) console.log(`Weekly history: ${status}, ${batchesCompleted} batches, ${refreshedPairs} refreshed, ${lastBatch.eligiblePairs} still eligible, ${lastBatch.deferredPairs} deferred.`);
+          },
+        });
+      } else if (operation !== "catalog") {
+        report = await run(operation === "resume" ? "collect" : operation, directory, config, authenticated, options);
+      }
     } catch (error) { failure = error; }
     finally { process.removeListener("SIGINT", stop); process.removeListener("SIGTERM", stop); }
     // A failed history batch may still have durable completed checkpoints. Preserve them.
@@ -56,13 +77,18 @@ export async function runHosted({ operation, directory, config, env = process.en
     const checkpoint = await save(api, directory, { branch: config.branch, generation });
     if (env.GITHUB_OUTPUT) await appendFile(env.GITHUB_OUTPUT, `state_release_id=${checkpoint.releaseId}\n`);
     if (failure) throw failure;
-    return { restored: Boolean(restored), operation, generation, archiveBytes: checkpoint.bytes, status: report?.status ?? "complete", metrics: report ? { durationMs: report.durationMs, cpuUserMs: report.cpuUserMs, cpuSystemMs: report.cpuSystemMs, maxRssKiB: report.maxRssKiB, quoteRequests: report.quoteRequests, history: report.history } : null };
+    return { restored: Boolean(restored), operation, generation, archiveBytes: checkpoint.bytes,
+      status: report?.session?.status ?? report?.status ?? "complete", historySession: report?.session,
+      metrics: report ? { durationMs: report.durationMs, cpuUserMs: report.cpuUserMs, cpuSystemMs: report.cpuSystemMs, maxRssKiB: report.maxRssKiB,
+        quoteRequests: report.quoteRequests, history: report.session ? undefined : report.history } : null };
   });
 }
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   try {
     const args = process.argv.slice(2);
-    for (const arg of args) if (!/^--operation=(?:adopt|quotes|history|resume|catalog|restore|prune)$/.test(arg)) throw new Error("Use --operation=adopt|quotes|history|resume|catalog|restore|prune.");
+    if (args.some((arg) => !OPERATIONS.some((operation) => arg === `--operation=${operation}`))) {
+      throw new Error(`Use --operation=${OPERATIONS.join("|")}.`);
+    }
     const operation = args[0]?.split("=")[1];
     const config = validateReleaseConfig(await readJson(join(ROOT, "config", "market.json")));
     if (!process.env.MARKET_STATE_DIRECTORY) throw new Error("Set an isolated MARKET_STATE_DIRECTORY in the workflow.");

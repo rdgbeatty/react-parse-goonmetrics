@@ -1,7 +1,12 @@
 name: Market collector
-run-name: Market collector · ${{ inputs.operation }}
+run-name: Market collector · ${{ inputs.operation || (github.event.schedule == '0 9 * * 1' && 'weekly-history' || 'quotes') }}
 
 on:
+  schedule:
+    - cron: '45 8 * * *'
+      timezone: America/New_York
+    - cron: '0 9 * * 1'
+      timezone: America/New_York
   workflow_dispatch:
     inputs:
       operation:
@@ -14,6 +19,7 @@ on:
           - resume
           - quotes
           - history
+          - weekly-history
           - catalog
       nonce:
         description: Nonsecret setup nonce (only for adoption; never paste tokens here)
@@ -29,9 +35,11 @@ concurrency:
 
 jobs:
   collect:
-    if: github.actor == github.repository_owner && github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
+    if: >-
+      github.ref == format('refs/heads/{0}', github.event.repository.default_branch) &&
+      (github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && github.actor == github.repository_owner))
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: ${{ (inputs.operation == 'weekly-history' || github.event.schedule == '0 9 * * 1') && 135 || 25 }}
     environment: market-collector
     permissions:
       contents: write
@@ -50,7 +58,7 @@ jobs:
       - run: npm ci
       - run: npm run release:collect -- --operation="$MARKET_OPERATION"
         env:
-          MARKET_OPERATION: ${{ inputs.operation }}
+          MARKET_OPERATION: ${{ inputs.operation || (github.event.schedule == '0 9 * * 1' && 'weekly-history' || 'quotes') }}
           MARKET_SETUP_NONCE: ${{ inputs.nonce }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           EVE_GRANT: ${{ secrets.EVE_GRANT }}

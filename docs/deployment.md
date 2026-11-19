@@ -33,9 +33,16 @@ A separate EVE application registration can preserve the existing local callback
 3. In Settings → Pages, choose GitHub Actions as the build source. The existing `github-pages` deployment environment should permit the default branch.
 4. Recommended for the first release: preserve the already-collected local dataset with `npm run release:seed -- --dry-run`, then `npm run release:seed`. The latter uploads only the validated nonsecret archive to a new state release and prompts for a repository-scoped owner token with **Contents: read/write** (hidden input). It refuses to overwrite an existing hosted state release and includes no grant/config/private caches. Revoke a separate seed token after use. Do this only after accepting the local build; it is an upload. Then run **Publish both sites** manually from Actions. If seeding was skipped, no state release is normal: the original site and owner setup publish while new market data remains unavailable. With seeding, the new viewer initially shows the same dated local dataset you reviewed. The current legacy deployment stays online until the replacement artifact successfully deploys.
 5. Open the new site's Owner setup, authorize EVE, then supply an owner GitHub token. Saving encrypts `EVE_PENDING_GRANT` and dispatches **Market collector → adopt**. Check that run's success; pending is not yet connected.
-6. Run **Resume / refresh markets**. It updates the catalog, preserves the refreshed grant, collects both active hubs, runs one bounded history batch, checkpoints state and deploys both sites. Continue history batches as needed. Schedules remain off.
+6. Run **Resume / refresh markets** to verify setup immediately. It updates the catalog, preserves the refreshed grant, collects both active hubs, runs one bounded history batch, checkpoints state and deploys both sites.
 
-The configured owner account is required for hosted operations; organization/multiple-administrator support is not included. Workflow guards check repository/default branch/owner and all release/collector workflows share one non-cancelling concurrency group. GitHub concurrency is not a durable FIFO queue: repeated clicks can replace pending runs. Do not dispatch repeatedly to build a backfill queue.
+The configured owner account is required for manual hosted operations. Scheduled collection runs on the configured default branch. All release and collector workflows share one concurrency group, so only one run at a time can update the grant, checkpoint or publication. Repeated dispatches can replace a run that is waiting.
+
+## Collection schedule
+
+- **8:45 a.m. Eastern daily:** `quotes` refreshes Jita and C-J6MT prices, checks for a catalog update and reuses the retained history summaries.
+- **9 a.m. Eastern Mondays:** `weekly-history` updates the rolling 21-day history and republishes its summaries with the existing quotes. It continues through 1,000-request, five-minute batches until eligible work is complete, ESI asks it to stop, or it reaches the two-hour pause threshold between batches. Completed work is saved so later runs can pick up the oldest eligible pairs. Check the `Weekly history` lines in the Action log for coverage, deferrals and progress.
+
+Both schedules follow `America/New_York` through daylight saving time. GitHub may delay a scheduled start and may disable schedules in an inactive public repository after 60 days. The owner can run `quotes`, `history` for a single batch, or `weekly-history` for a full pass from [Market collector](https://github.com/rdgbeatty/react-parse-goonmetrics/actions/workflows/market-collect.yml). [GitHub schedule behavior](https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#schedule)
 
 ## Writer credentials: choose one
 
@@ -65,7 +72,7 @@ Generated data is not committed. The `market-state` prerelease holds up to three
 
 Restore validates all entries before writing, rejects paths outside the allowlist and rejects symlinks/credential fields. It restores the newest uploaded generation; corruption stops the job rather than silently rolling history backwards. Repair/remove a corrupt newest asset deliberately, or remove the state release to trigger a documented cold rebuild. Never restore unreviewed files over a local private directory.
 
-Quotes publish independently of incomplete/failed history. Each manual run is bounded to one 1,000-request / five-minute history batch, with ESI expiry, corrections, 24-hour item deferrals and retained checkpoints. A later batch resumes through freshness checks; it does not require a multi-hour Action. HTTP retries count toward history's budget. A failed run can still save completed state; it does not deploy a failed publication. Hard cancellation may lose work since the last saved release checkpoint.
+Quotes publish independently of incomplete history. `history` and `resume` run one 1,000-request, five-minute history batch. Each batch respects ESI expiry and retains corrections and 24-hour item deferrals. HTTP retries count toward the request budget. A failed run can save completed state for the next attempt. Hard cancellation may lose work since the last saved release checkpoint.
 
 Catalog updates share the existing updater. A missing cache/state rebuilds from CCP; a missing grant requires reconnecting. Required C-J6MT failures leave the last published site intact. Optional retired/future hubs may be omitted according to configuration. Restored snapshots remain dated, including old history, until a successful refresh.
 
@@ -77,6 +84,6 @@ Both sites deploy in one Pages artifact, so navigation/assets cannot refer to di
 - Use separate documents, root hash routes and `/market/`, packaged by one Vite/npm build. The local collector remains Node; the legacy Deno API remains independently deployed until removal.
 - Do not scrape Goonmetrics periodically in Actions. Browser scraping was not adopted because cross-origin permission is controlled upstream; it is not a reliable fallback assumption.
 - New market data never silently falls back to scraped rows. The original site remains an explicit user-selected fallback, preserving provenance and avoiding schema/metric mismatches.
-- Manual workflows only. No push-triggered deployments or collection schedules are introduced.
+- Publish both sites can also run manually to release a source change between scheduled collections.
 - Installed legacy dependencies currently report audit advisories in Vite/esbuild, React Router and Zod. The combined release serves built static files rather than a Vite development server, uses fixed navigation links and performs no SSR. No force-upgrade was applied. Review/upgrade those dependencies separately; the original Deno API was not redeployed or audited by this task.
-- Local/mocked verification cannot establish production callback registration, actual GitHub permissions, real queued Secret rotation or Pages delivery. The first live integration run remains an owner-assisted release step after local acceptance.
+- Production adoption and authenticated Jita/C-J6MT collection have passed. [First authenticated collection and publication](https://github.com/rdgbeatty/react-parse-goonmetrics/actions/runs/44457605064)
