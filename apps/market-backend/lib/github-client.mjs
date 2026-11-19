@@ -1,6 +1,6 @@
 // Shared browser/runner REST client. Never include upstream response bodies in errors.
 export class GitHubApi {
-  constructor({ repository, token, environment = "market-collector", fetchImpl = globalThis.fetch, seal }) {
+  constructor({ repository, token, environment = "market-collector", fetchImpl = globalThis.fetch.bind(globalThis), seal }) {
     if (!/^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/.test(repository)) throw new Error("Expected GitHub owner/repository.");
     if (!token || /\s/.test(token)) throw new Error("Supply a GitHub token with the documented permissions.");
     if (!/^[A-Za-z0-9_-]+$/.test(environment)) throw new Error("Invalid collector environment.");

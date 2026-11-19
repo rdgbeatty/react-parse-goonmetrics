@@ -20,7 +20,8 @@ function clientId(value) {
 function safeError(error) { return OAUTH_ERRORS.has(error) ? error : "unavailable"; }
 
 export class BrowserEveSso {
-  constructor({ fetchImpl = globalThis.fetch, cryptoImpl = globalThis.crypto,
+  // Browsers require the global object as the receiver of native fetch.
+  constructor({ fetchImpl = globalThis.fetch.bind(globalThis), cryptoImpl = globalThis.crypto,
     storage = globalThis.sessionStorage, now = () => Date.now() } = {}) {
     this.fetch = fetchImpl; this.crypto = cryptoImpl; this.storage = storage; this.now = now;
   }

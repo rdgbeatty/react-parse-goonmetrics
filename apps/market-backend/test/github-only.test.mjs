@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { createHash, generateKeyPairSync, sign, webcrypto } from "node:crypto";
 import { BrowserEveSso, SCOPES, probeBrowserAccess } from "../spikes/github-only/eve-browser.mjs";
+import { GitHubApi } from "../lib/github-client.mjs";
 
 const NOW = Date.parse("2026-11-17T12:00:00Z");
 const REDIRECT = "http://localhost:4173/auth/eve/callback";
@@ -34,6 +35,19 @@ async function callback(h) {
   const url = new URL(await h.sso.begin(ID, REDIRECT));
   return `${REDIRECT}?code=fake-code-for-test-only&state=${url.searchParams.get("state")}`;
 }
+
+test("owner setup clients call native browser fetch with the global receiver", async (t) => {
+  t.mock.method(globalThis, "fetch", async function (url) {
+    if (this !== globalThis) throw new TypeError("Illegal invocation");
+    if (url === "https://login.eveonline.com/.well-known/oauth-authorization-server") return json(metadata);
+    if (url === "https://api.github.com/user") return json({ login: "test-owner" });
+    throw new Error("Unexpected request");
+  });
+  const sso = new BrowserEveSso({ cryptoImpl: webcrypto, storage: new Map() });
+  const api = new GitHubApi({ repository: "test-owner/test-repo", token: "fake-owner-token" });
+  assert.deepEqual(await sso.metadata(), metadata);
+  assert.deepEqual(await api.request("/user"), { login: "test-owner" });
+});
 
 test("browser PKCE exchanges with no secret/cookies, validates signed token, and never persists a grant", async () => {
   const h = harness();
